@@ -1,3 +1,6 @@
 <Solution>
   <Project Path="RamT.Api/RamT.Api.csproj" />
+  <Project Path="RamT.Application/RamT.Application.csproj" />
+  <Project Path="RamT.Domain/RamT.Domain.csproj" />
+  <Project Path="RamT.Infrastructure/RamT.Infrastructure.csproj" />
 </Solution>
