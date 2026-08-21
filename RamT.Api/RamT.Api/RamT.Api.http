@@ -1,0 +1,6 @@
+@RamT.Api_HostAddress = http://localhost:5174
+
+GET {{RamT.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
