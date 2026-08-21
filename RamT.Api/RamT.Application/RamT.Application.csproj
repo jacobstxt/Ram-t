@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RamT.Domain\RamT.Domain.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
 </Project>

@@ -20,4 +20,8 @@
     <ProjectReference Include="..\RamT.Infrastructure\RamT.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="localImages\" />
+  </ItemGroup>
+
 </Project>
