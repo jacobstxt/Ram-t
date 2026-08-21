@@ -1,0 +1,52 @@
+{
+  [
+    {
+      "Id": 1,
+      "Name": "Блискавкозахист",
+      "Slug": "blyskavkozahyst",
+      "ParentCategoryId": null
+    },
+    {
+      "Id": 2,
+      "Name": "Електроживлення",
+      "Slug": "elektrozhyvlennya",
+      "ParentCategoryId": null
+    },
+    {
+      "Id": 3,
+      "Name": "Заземлення",
+      "Slug": "zazemlennya",
+      "ParentCategoryId": null
+    },
+    {
+      "Id": 4,
+      "Name": "Засоби монтажу",
+      "Slug": "zasoby-montazhu",
+      "ParentCategoryId": null
+    },
+    {
+      "Id": 5,
+      "Name": "ПЗІП CITEL",
+      "Slug": "pzip-citel",
+      "ParentCategoryId": null
+    },
+    {
+      "Id": 6,
+      "Name": "Блискавкоприймачі",
+      "Slug": "blyskavkopryimachi",
+      "ParentCategoryId": 1
+    },
+    {
+      "Id": 7,
+      "Name": "Затискачі",
+      "Slug": "zatyskachi",
+      "ParentCategoryId": 1
+    },
+    {
+      "Id": 8,
+      "Name": "Провідники",
+      "Slug": "providnyky",
+      "ParentCategoryId": 1
+    }
+  ]
+}
