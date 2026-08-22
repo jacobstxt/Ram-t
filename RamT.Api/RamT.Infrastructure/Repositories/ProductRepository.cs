@@ -29,12 +29,21 @@ public class ProductRepository : IProductRepository
             .Include(p => p.Category)
             .FirstOrDefaultAsync(p => p.Id == id);
 
-    public async Task AddAsync(Product product) =>
+    public async Task AddAsync(Product product)
+    {
         await _context.Products.AddAsync(product);
+        await _context.SaveChangesAsync();
+    }
 
-    public void Update(Product product) =>
+    public async Task UpdateAsync(Product product)
+    {
         _context.Products.Update(product);
+        await _context.SaveChangesAsync();
+    }
 
-    public void Delete(Product product) =>
+    public async Task DeleteAsync(Product product)
+    {
         _context.Products.Remove(product);
+        await _context.SaveChangesAsync();
+    }
 }

@@ -266,3 +266,5 @@ __pycache__/
 **/appsettings.Development.json
 
 localImages
+
+/docs
