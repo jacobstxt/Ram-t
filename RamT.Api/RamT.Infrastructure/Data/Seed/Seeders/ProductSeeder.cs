@@ -1,26 +1,17 @@
+using AutoMapper;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using RamT.Application.Interfaces;
 using RamT.Application.Models.SeedDTO;
 using RamT.Domain.Entities;
-using RamT.Infrastructure.Data;
 
 namespace RamT.Infrastructure.Data.Seed;
 
-public class ProductSeeder : ISeeder
+public class ProductSeeder(AppDbContext context, IImageService imageService, IMapper mapper) : ISeeder
 {
-    private readonly AppDbContext _context;
-    private readonly IImageService _imageService;
-
-    public ProductSeeder(AppDbContext context, IImageService imageService)
-    {
-        _context = context;
-        _imageService = imageService;
-    }
-
     public async Task SeedAsync()
     {
-        if (await _context.Products.AnyAsync())
+        if (await context.Products.AnyAsync())
             return;
 
         var jsonPath = Path.Combine(
@@ -34,27 +25,17 @@ public class ProductSeeder : ISeeder
             PropertyNameCaseInsensitive = true
         }) ?? [];
 
-        var products = dtos.Select(dto => new Product
-        {
-            Id = dto.Id,
-            Name = dto.Name,
-            ShortDescription = dto.ShortDescription,
-            Description = dto.Description,
-            Manufacturer = dto.Manufacturer,
-            WarrantyYears = dto.WarrantyYears,
-            Price = dto.Price,
-            CategoryId = dto.CategoryId
-        }).ToList();
+        var products = mapper.Map<List<Product>>(dtos);
 
-        await _context.Products.AddRangeAsync(products);
-        await _context.SaveChangesAsync();
+        await context.Products.AddRangeAsync(products);
+        await context.SaveChangesAsync();
 
         var images = new List<ProductImage>();
         foreach (var dto in dtos)
         {
             for (int i = 0; i < dto.Images.Count; i++)
             {
-                var localName = await _imageService.SaveImageFromUrlAsync(dto.Images[i]);
+                var localName = await imageService.SaveImageFromUrlAsync(dto.Images[i]);
                 images.Add(new ProductImage
                 {
                     ProductId = dto.Id,
@@ -64,41 +45,39 @@ public class ProductSeeder : ISeeder
             }
         }
 
-        var composition = dtos.SelectMany(dto => dto.Composition.Select(c => new ProductComposition
+        var composition = dtos.SelectMany(dto => dto.Composition.Select(c =>
         {
-            ProductId = dto.Id,
-            Item = c.Item,
-            Qty = c.Qty
+            var entity = mapper.Map<ProductComposition>(c);
+            entity.ProductId = dto.Id;
+            return entity;
         })).ToList();
 
-        var characteristics = dtos.SelectMany(dto => dto.Characteristics.Select(c => new ProductCharacteristic
+        var characteristics = dtos.SelectMany(dto => dto.Characteristics.Select(c =>
         {
-            ProductId = dto.Id,
-            Key = c.Key,
-            Value = c.Value
+            var entity = mapper.Map<ProductCharacteristic>(c);
+            entity.ProductId = dto.Id;
+            return entity;
         })).ToList();
 
-        var reviews = dtos.SelectMany(dto => dto.Reviews.Select(r => new ProductReview
+        var reviews = dtos.SelectMany(dto => dto.Reviews.Select(r =>
         {
-            ProductId = dto.Id,
-            AuthorName = r.AuthorName,
-            Text = r.Text,
-            Rating = r.Rating,
-            CreatedAt = r.CreatedAt
+            var entity = mapper.Map<ProductReview>(r);
+            entity.ProductId = dto.Id;
+            return entity;
         })).ToList();
 
         if (images.Count > 0)
-            await _context.ProductImages.AddRangeAsync(images);
+            await context.ProductImages.AddRangeAsync(images);
 
         if (composition.Count > 0)
-            await _context.ProductCompositions.AddRangeAsync(composition);
+            await context.ProductCompositions.AddRangeAsync(composition);
 
         if (characteristics.Count > 0)
-            await _context.ProductCharacteristics.AddRangeAsync(characteristics);
+            await context.ProductCharacteristics.AddRangeAsync(characteristics);
 
         if (reviews.Count > 0)
-            await _context.ProductReviews.AddRangeAsync(reviews);
+            await context.ProductReviews.AddRangeAsync(reviews);
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
     }
 }

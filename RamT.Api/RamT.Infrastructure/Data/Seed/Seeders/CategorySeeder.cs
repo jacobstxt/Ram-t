@@ -1,4 +1,3 @@
-
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using RamT.Application.Interfaces;
@@ -7,18 +6,11 @@ using RamT.Domain.Entities;
 
 namespace RamT.Infrastructure.Data.Seed;
 
-public class CategorySeeder : ISeeder
+public class CategorySeeder(AppDbContext context) : ISeeder
 {
-    private readonly AppDbContext _context;
-
-    public CategorySeeder(AppDbContext context)
-    {
-        _context = context;
-    }
-
     public async Task SeedAsync()
     {
-        if (await _context.Categories.AnyAsync())
+        if (await context.Categories.AnyAsync())
             return;
 
         var jsonPath = Path.Combine(
@@ -32,7 +24,6 @@ public class CategorySeeder : ISeeder
             PropertyNameCaseInsensitive = true
         }) ?? [];
 
-        // Спочатку вставляємо батьківські категорії (ParentCategoryId == null)
         var parents = dtos.Where(c => c.ParentCategoryId == null).Select(dto => new Category
         {
             Id = dto.Id,
@@ -41,8 +32,8 @@ public class CategorySeeder : ISeeder
             ParentCategoryId = null
         }).ToList();
 
-        await _context.Categories.AddRangeAsync(parents);
-        await _context.SaveChangesAsync();
+        await context.Categories.AddRangeAsync(parents);
+        await context.SaveChangesAsync();
 
         // Потім вставляємо дочірні категорії
         var children = dtos.Where(c => c.ParentCategoryId != null).Select(dto => new Category
@@ -55,8 +46,8 @@ public class CategorySeeder : ISeeder
 
         if (children.Count > 0)
         {
-            await _context.Categories.AddRangeAsync(children);
-            await _context.SaveChangesAsync();
+            await context.Categories.AddRangeAsync(children);
+            await context.SaveChangesAsync();
         }
     }
 }

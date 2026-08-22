@@ -6,17 +6,10 @@ using RamT.Infrastructure.Data;
 
 namespace RamT.Infrastructure.Repositories;
 
-public class ProductRepository : IProductRepository
+public class ProductRepository(AppDbContext context) : IProductRepository
 {
-    private readonly AppDbContext _context;
-
-    public ProductRepository(AppDbContext context)
-    {
-        _context = context;
-    }
-
     public async Task<List<Product>> GetAllAsync() =>
-        await _context.Products
+        await context.Products
             .Include(p => p.Category)
             .Include(p => p.Images.OrderBy(i => i.SortOrder))
             .Include(p => p.Composition)
@@ -25,7 +18,7 @@ public class ProductRepository : IProductRepository
             .ToListAsync();
 
     public async Task<List<Product>> GetByCategoryIdAsync(int categoryId) =>
-        await _context.Products
+        await context.Products
             .Include(p => p.Category)
             .Include(p => p.Images.OrderBy(i => i.SortOrder))
             .Include(p => p.Composition)
@@ -35,7 +28,7 @@ public class ProductRepository : IProductRepository
             .ToListAsync();
 
     public async Task<Product?> GetByIdAsync(int id) =>
-        await _context.Products
+        await context.Products
             .Include(p => p.Category)
             .Include(p => p.Images.OrderBy(i => i.SortOrder))
             .Include(p => p.Composition)
@@ -45,19 +38,19 @@ public class ProductRepository : IProductRepository
 
     public async Task AddAsync(Product product)
     {
-        await _context.Products.AddAsync(product);
-        await _context.SaveChangesAsync();
+        await context.Products.AddAsync(product);
+        await context.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(Product product)
     {
-        _context.Products.Update(product);
-        await _context.SaveChangesAsync();
+        context.Products.Update(product);
+        await context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Product product)
     {
-        _context.Products.Remove(product);
-        await _context.SaveChangesAsync();
+        context.Products.Remove(product);
+        await context.SaveChangesAsync();
     }
 }

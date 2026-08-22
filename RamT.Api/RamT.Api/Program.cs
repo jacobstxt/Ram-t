@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RamT.Application.Interfaces;
+using RamT.Application.Mappings;
 using RamT.Application.Services;
 using RamT.Infrastructure.Data;
 using RamT.Infrastructure.Data.Seed;
@@ -11,6 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile<ProductProfile>());
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ProductService>();
