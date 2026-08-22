@@ -1,13 +1,12 @@
-using AutoMapper;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using RamT.Application.Interfaces;
+using RamT.Application.Mappings;
 using RamT.Application.Models.SeedDTO;
-using RamT.Domain.Entities;
 
 namespace RamT.Infrastructure.Data.Seed;
 
-public class CategorySeeder(AppDbContext context, IMapper mapper) : ISeeder
+public class CategorySeeder(AppDbContext context, CategoryMapper mapper) : ISeeder
 {
     public async Task SeedAsync()
     {
@@ -25,11 +24,11 @@ public class CategorySeeder(AppDbContext context, IMapper mapper) : ISeeder
             PropertyNameCaseInsensitive = true
         }) ?? [];
 
-        var parents = mapper.Map<List<Category>>(dtos.Where(c => c.ParentCategoryId == null));
+        var parents = mapper.ToEntityList(dtos.Where(c => c.ParentCategoryId == null).ToList());
         await context.Categories.AddRangeAsync(parents);
         await context.SaveChangesAsync();
 
-        var children = mapper.Map<List<Category>>(dtos.Where(c => c.ParentCategoryId != null));
+        var children = mapper.ToEntityList(dtos.Where(c => c.ParentCategoryId != null).ToList());
         if (children.Count > 0)
         {
             await context.Categories.AddRangeAsync(children);

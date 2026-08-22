@@ -1,13 +1,13 @@
-using AutoMapper;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using RamT.Application.Interfaces;
+using RamT.Application.Mappings;
 using RamT.Application.Models.SeedDTO;
 using RamT.Domain.Entities;
 
 namespace RamT.Infrastructure.Data.Seed;
 
-public class ProductSeeder(AppDbContext context, IImageService imageService, IMapper mapper) : ISeeder
+public class ProductSeeder(AppDbContext context, IImageService imageService, ProductMapper mapper) : ISeeder
 {
     public async Task SeedAsync()
     {
@@ -25,8 +25,7 @@ public class ProductSeeder(AppDbContext context, IImageService imageService, IMa
             PropertyNameCaseInsensitive = true
         }) ?? [];
 
-        var products = mapper.Map<List<Product>>(dtos);
-
+        var products = mapper.ToEntityList(dtos);
         await context.Products.AddRangeAsync(products);
         await context.SaveChangesAsync();
 
@@ -47,21 +46,21 @@ public class ProductSeeder(AppDbContext context, IImageService imageService, IMa
 
         var composition = dtos.SelectMany(dto => dto.Composition.Select(c =>
         {
-            var entity = mapper.Map<ProductComposition>(c);
+            var entity = mapper.ToEntity(c);
             entity.ProductId = dto.Id;
             return entity;
         })).ToList();
 
         var characteristics = dtos.SelectMany(dto => dto.Characteristics.Select(c =>
         {
-            var entity = mapper.Map<ProductCharacteristic>(c);
+            var entity = mapper.ToEntity(c);
             entity.ProductId = dto.Id;
             return entity;
         })).ToList();
 
         var reviews = dtos.SelectMany(dto => dto.Reviews.Select(r =>
         {
-            var entity = mapper.Map<ProductReview>(r);
+            var entity = mapper.ToEntity(r);
             entity.ProductId = dto.Id;
             return entity;
         })).ToList();
