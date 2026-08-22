@@ -4,3 +4,5 @@ public interface ISeeder
 {
     Task SeedAsync();
 }
+
+

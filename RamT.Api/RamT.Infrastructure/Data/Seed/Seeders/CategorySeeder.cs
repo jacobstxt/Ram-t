@@ -5,7 +5,7 @@ using RamT.Application.Interfaces;
 using RamT.Application.Models.SeedDTO;
 using RamT.Domain.Entities;
 
-namespace RamT.Infrastructure.Data.Seed.Seeders;
+namespace RamT.Infrastructure.Data.Seed;
 
 public class CategorySeeder : ISeeder
 {

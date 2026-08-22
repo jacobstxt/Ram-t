@@ -36,8 +36,23 @@ public class ProductService
         Name = product.Name,
         Description = product.Description,
         Price = product.Price,
-        ImageUrl = product.ImageUrl,
         CategoryId = product.CategoryId,
-        CategoryName = product.Category?.Name ?? string.Empty
+        CategoryName = product.Category?.Name ?? string.Empty,
+        Images = product.Images
+            .OrderBy(i => i.SortOrder)
+            .Select(i => i.Url)
+            .ToList(),
+        Characteristics = product.Characteristics
+            .Select(c => new CharacteristicDto { Key = c.Key, Value = c.Value })
+            .ToList(),
+        Reviews = product.Reviews
+            .Select(r => new ReviewDto
+            {
+                AuthorName = r.AuthorName,
+                Text = r.Text,
+                Rating = r.Rating,
+                CreatedAt = r.CreatedAt
+            })
+            .ToList()
     };
 }

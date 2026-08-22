@@ -16,17 +16,28 @@ public class ProductRepository : IProductRepository
     }
 
     public async Task<List<Product>> GetAllAsync() =>
-        await _context.Products.Include(p => p.Category).ToListAsync();
+        await _context.Products
+            .Include(p => p.Category)
+            .Include(p => p.Images.OrderBy(i => i.SortOrder))
+            .Include(p => p.Characteristics)
+            .Include(p => p.Reviews)
+            .ToListAsync();
 
     public async Task<List<Product>> GetByCategoryIdAsync(int categoryId) =>
         await _context.Products
             .Include(p => p.Category)
+            .Include(p => p.Images.OrderBy(i => i.SortOrder))
+            .Include(p => p.Characteristics)
+            .Include(p => p.Reviews)
             .Where(p => p.CategoryId == categoryId)
             .ToListAsync();
 
     public async Task<Product?> GetByIdAsync(int id) =>
         await _context.Products
             .Include(p => p.Category)
+            .Include(p => p.Images.OrderBy(i => i.SortOrder))
+            .Include(p => p.Characteristics)
+            .Include(p => p.Reviews)
             .FirstOrDefaultAsync(p => p.Id == id);
 
     public async Task AddAsync(Product product)

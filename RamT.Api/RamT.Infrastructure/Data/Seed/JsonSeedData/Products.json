@@ -1,25 +1,31 @@
-{
-  [
-    {
-      "Id": 1,
-      "Name": "Блискавкоприймач стрижневий 1.5м",
-      "Description": "Стрижневий блискавкоприймач для захисту приватних будинків",
-      "Price": 450,
-      "CategoryId": 6
-    },
-    {
-      "Id": 2,
-      "Name": "Затискач для струмовідводу",
-      "Description": "Затискач для кріплення струмовідводу",
-      "Price": 85,
-      "CategoryId": 7
-    },
-    {
-      "Id": 3,
-      "Name": "Провідник заземлення мідний 8мм",
-      "Description": "Мідний провідник для системи блискавкозахисту",
-      "Price": 120,
-      "CategoryId": 8
-    }
-  ]
-}
+[
+  {
+    "Id": 1,
+    "Name": "Комплект заземлення обміднений 4.5м Galmar 44045",
+    "Description": "",
+    "Price": 4200.00,
+    "CategoryId": 6,
+    "Images": [
+      "images/products/blyskavkopryimach-1-1.webp",
+      "images/products/blyskavkopryimach-1-2.webp"
+    ],
+    "Characteristics": [
+      {
+        "Key": "Довжина",
+        "Value": "4,5м"
+      },
+      {
+        "Key": "Матеріал",
+        "Value": "Mi (Обміднена сталь)"
+      }
+    ],
+    "Reviews": [
+      {
+        "AuthorName": "Іван Петренко",
+        "Text": "Якісний товар, встановив без проблем. Рекомендую!",
+        "Rating": 5,
+        "CreatedAt": "2026-01-15T00:00:00Z"
+      }
+    ]
+  } 
+]

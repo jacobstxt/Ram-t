@@ -10,10 +10,12 @@ namespace RamT.Infrastructure.Data.Seed;
 public class ProductSeeder : ISeeder
 {
     private readonly AppDbContext _context;
+    private readonly IImageService _imageService;
 
-    public ProductSeeder(AppDbContext context)
+    public ProductSeeder(AppDbContext context, IImageService imageService)
     {
         _context = context;
+        _imageService = imageService;
     }
 
     public async Task SeedAsync()
@@ -42,6 +44,48 @@ public class ProductSeeder : ISeeder
         }).ToList();
 
         await _context.Products.AddRangeAsync(products);
+        await _context.SaveChangesAsync();
+
+        var images = new List<ProductImage>();
+        foreach (var dto in dtos)
+        {
+            for (int i = 0; i < dto.Images.Count; i++)
+            {
+                var localName = await _imageService.SaveImageFromUrlAsync(dto.Images[i]);
+                images.Add(new ProductImage
+                {
+                    ProductId = dto.Id,
+                    Url = localName,
+                    SortOrder = i
+                });
+            }
+        }
+
+        var characteristics = dtos.SelectMany(dto => dto.Characteristics.Select(c => new ProductCharacteristic
+        {
+            ProductId = dto.Id,
+            Key = c.Key,
+            Value = c.Value
+        })).ToList();
+
+        var reviews = dtos.SelectMany(dto => dto.Reviews.Select(r => new ProductReview
+        {
+            ProductId = dto.Id,
+            AuthorName = r.AuthorName,
+            Text = r.Text,
+            Rating = r.Rating,
+            CreatedAt = r.CreatedAt
+        })).ToList();
+
+        if (images.Count > 0)
+            await _context.ProductImages.AddRangeAsync(images);
+
+        if (characteristics.Count > 0)
+            await _context.ProductCharacteristics.AddRangeAsync(characteristics);
+
+        if (reviews.Count > 0)
+            await _context.ProductReviews.AddRangeAsync(reviews);
+
         await _context.SaveChangesAsync();
     }
 }
