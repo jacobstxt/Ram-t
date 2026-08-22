@@ -20,7 +20,9 @@ builder.Services.AddAutoMapper(cfg =>
 });
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 
 // Реєстрація сідерів (порядок важливий: Categories перед Products)
