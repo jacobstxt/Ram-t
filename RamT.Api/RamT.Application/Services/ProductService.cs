@@ -34,13 +34,19 @@ public class ProductService
     {
         Id = product.Id,
         Name = product.Name,
+        ShortDescription = product.ShortDescription,
         Description = product.Description,
+        Manufacturer = product.Manufacturer,
+        WarrantyYears = product.WarrantyYears,
         Price = product.Price,
         CategoryId = product.CategoryId,
         CategoryName = product.Category?.Name ?? string.Empty,
         Images = product.Images
             .OrderBy(i => i.SortOrder)
             .Select(i => i.Url)
+            .ToList(),
+        Composition = product.Composition
+            .Select(c => new CompositionDto { Item = c.Item, Qty = c.Qty })
             .ToList(),
         Characteristics = product.Characteristics
             .Select(c => new CharacteristicDto { Key = c.Key, Value = c.Value })

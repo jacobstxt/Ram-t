@@ -2,12 +2,51 @@
   {
     "Id": 1,
     "Name": "Комплект заземлення обміднений 4.5м Galmar 44045",
-    "Description": "",
+    "ShortDescription": "Комплект містить усе необхідне для монтажу захисного заземлення.",
+    "Manufacturer": "Galmar (Польща)",
+    "WarrantyYears": 50,
     "Price": 4200.00,
     "CategoryId": 6,
     "Images": [
-      "images/products/blyskavkopryimach-1-1.webp",
-      "images/products/blyskavkopryimach-1-2.webp"
+      "https://ram-t.com/wp-content/uploads/2026/03/40_452mi-500x500-1-300x300.jpg",
+      "https://ram-t.com/wp-content/uploads/2026/03/01-500x500-1.png",
+      "https://ram-t.com/wp-content/uploads/2026/03/40_452mi-500x500-1.jpg",
+      "https://ram-t.com/wp-content/uploads/2026/03/pasta-scaled-1.jpg",
+      "https://ram-t.com/wp-content/uploads/2026/03/Zatyskach-prut-d16polosadrit-d8-10-nerzhaviyka.jpg",
+      "https://ram-t.com/wp-content/uploads/2026/03/mufta-latun-.jpg",
+      "https://ram-t.com/wp-content/uploads/2026/03/Bolt1-1.jpg",
+      "https://ram-t.com/wp-content/uploads/2026/03/syra-huma.jpg",
+      "https://ram-t.com/wp-content/uploads/2026/03/nakone4nyk2-500x500-1.jpg"
+    ],
+    "Composition": [
+      {
+        "Item": "Стержні обміднені d14.2mm L1500",
+        "Qty": "3 шт."
+      },
+      {
+        "Item": "Муфта латунна",
+        "Qty": "3 шт."
+      },
+      {
+        "Item": "Наконечник",
+        "Qty": "1 шт."
+      },
+      {
+        "Item": "Болт для забивання стержнів",
+        "Qty": "1 шт."
+      },
+      {
+        "Item": "Затискач стержень/полоса/дріт (нержавійка)",
+        "Qty": "1 шт."
+      },
+      {
+        "Item": "Стрічка гідроізоляційна 1,5 м",
+        "Qty": "1 шт."
+      },
+      {
+        "Item": "Струмопровідна паста",
+        "Qty": "1 шт."
+      }
     ],
     "Characteristics": [
       {
@@ -17,6 +56,14 @@
       {
         "Key": "Матеріал",
         "Value": "Mi (Обміднена сталь)"
+      },
+      {
+        "Key": "Діаметр",
+        "Value": "16 мм"
+      },
+      {
+        "Key": "Країна виробник",
+        "Value": "Україна"
       }
     ],
     "Reviews": [
@@ -27,5 +74,5 @@
         "CreatedAt": "2026-01-15T00:00:00Z"
       }
     ]
-  } 
+  }
 ]

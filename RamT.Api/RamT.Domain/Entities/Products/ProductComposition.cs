@@ -1,11 +1,10 @@
-// RamT.Domain/Entities/ProductImage.cs
 namespace RamT.Domain.Entities;
 
-public class ProductImage
+public class ProductComposition
 {
     public int Id { get; set; }
     public int ProductId { get; set; }
     public Product Product { get; set; } = null!;
-    public string Url { get; set; } = string.Empty;
-    public int SortOrder { get; set; }
+    public string Item { get; set; } = string.Empty;
+    public string Qty { get; set; } = string.Empty;
 }

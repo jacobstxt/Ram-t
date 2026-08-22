@@ -19,6 +19,7 @@ public class ProductRepository : IProductRepository
         await _context.Products
             .Include(p => p.Category)
             .Include(p => p.Images.OrderBy(i => i.SortOrder))
+            .Include(p => p.Composition)
             .Include(p => p.Characteristics)
             .Include(p => p.Reviews)
             .ToListAsync();
@@ -27,6 +28,7 @@ public class ProductRepository : IProductRepository
         await _context.Products
             .Include(p => p.Category)
             .Include(p => p.Images.OrderBy(i => i.SortOrder))
+            .Include(p => p.Composition)
             .Include(p => p.Characteristics)
             .Include(p => p.Reviews)
             .Where(p => p.CategoryId == categoryId)
@@ -36,6 +38,7 @@ public class ProductRepository : IProductRepository
         await _context.Products
             .Include(p => p.Category)
             .Include(p => p.Images.OrderBy(i => i.SortOrder))
+            .Include(p => p.Composition)
             .Include(p => p.Characteristics)
             .Include(p => p.Reviews)
             .FirstOrDefaultAsync(p => p.Id == id);

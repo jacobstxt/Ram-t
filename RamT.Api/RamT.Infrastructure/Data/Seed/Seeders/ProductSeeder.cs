@@ -38,7 +38,10 @@ public class ProductSeeder : ISeeder
         {
             Id = dto.Id,
             Name = dto.Name,
+            ShortDescription = dto.ShortDescription,
             Description = dto.Description,
+            Manufacturer = dto.Manufacturer,
+            WarrantyYears = dto.WarrantyYears,
             Price = dto.Price,
             CategoryId = dto.CategoryId
         }).ToList();
@@ -61,6 +64,13 @@ public class ProductSeeder : ISeeder
             }
         }
 
+        var composition = dtos.SelectMany(dto => dto.Composition.Select(c => new ProductComposition
+        {
+            ProductId = dto.Id,
+            Item = c.Item,
+            Qty = c.Qty
+        })).ToList();
+
         var characteristics = dtos.SelectMany(dto => dto.Characteristics.Select(c => new ProductCharacteristic
         {
             ProductId = dto.Id,
@@ -79,6 +89,9 @@ public class ProductSeeder : ISeeder
 
         if (images.Count > 0)
             await _context.ProductImages.AddRangeAsync(images);
+
+        if (composition.Count > 0)
+            await _context.ProductCompositions.AddRangeAsync(composition);
 
         if (characteristics.Count > 0)
             await _context.ProductCharacteristics.AddRangeAsync(characteristics);

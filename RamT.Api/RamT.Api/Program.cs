@@ -4,6 +4,7 @@ using RamT.Application.Services;
 using RamT.Infrastructure.Data;
 using RamT.Infrastructure.Data.Seed;
 using RamT.Infrastructure.Repositories;
+using RamT.Infrastructure.Services;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<IImageService, ImageService>();
 
 // Реєстрація сідерів (порядок важливий: Categories перед Products)
 builder.Services.AddScoped<ISeeder, CategorySeeder>();

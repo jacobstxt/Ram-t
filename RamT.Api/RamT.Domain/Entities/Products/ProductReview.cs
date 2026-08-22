@@ -1,4 +1,3 @@
-// RamT.Domain/Entities/ProductReview.cs
 namespace RamT.Domain.Entities;
 
 public class ProductReview

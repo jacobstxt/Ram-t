@@ -10,6 +10,7 @@ public class AppDbContext : DbContext
     public DbSet<Product> Products => Set<Product>();
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<ProductImage> ProductImages => Set<ProductImage>();
+    public DbSet<ProductComposition> ProductCompositions => Set<ProductComposition>();
     public DbSet<ProductCharacteristic> ProductCharacteristics => Set<ProductCharacteristic>();
     public DbSet<ProductReview> ProductReviews => Set<ProductReview>();
 
@@ -25,6 +26,12 @@ public class AppDbContext : DbContext
             .HasOne(i => i.Product)
             .WithMany(p => p.Images)
             .HasForeignKey(i => i.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ProductComposition>()
+            .HasOne(c => c.Product)
+            .WithMany(p => p.Composition)
+            .HasForeignKey(c => c.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<ProductCharacteristic>()

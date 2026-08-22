@@ -1,4 +1,3 @@
-// RamT.Domain/Entities/ProductCharacteristic.cs
 namespace RamT.Domain.Entities;
 
 public class ProductCharacteristic
