@@ -1,52 +1,116 @@
-{
-  [
-    {
-      "Id": 1,
-      "Name": "Блискавкозахист",
-      "Slug": "blyskavkozahyst",
-      "ParentCategoryId": null
-    },
-    {
-      "Id": 2,
-      "Name": "Електроживлення",
-      "Slug": "elektrozhyvlennya",
-      "ParentCategoryId": null
-    },
-    {
-      "Id": 3,
-      "Name": "Заземлення",
-      "Slug": "zazemlennya",
-      "ParentCategoryId": null
-    },
-    {
-      "Id": 4,
-      "Name": "Засоби монтажу",
-      "Slug": "zasoby-montazhu",
-      "ParentCategoryId": null
-    },
-    {
-      "Id": 5,
-      "Name": "ПЗІП CITEL",
-      "Slug": "pzip-citel",
-      "ParentCategoryId": null
-    },
-    {
-      "Id": 6,
-      "Name": "Блискавкоприймачі",
-      "Slug": "blyskavkopryimachi",
-      "ParentCategoryId": 1
-    },
-    {
-      "Id": 7,
-      "Name": "Затискачі",
-      "Slug": "zatyskachi",
-      "ParentCategoryId": 1
-    },
-    {
-      "Id": 8,
-      "Name": "Провідники",
-      "Slug": "providnyky",
-      "ParentCategoryId": 1
-    }
-  ]
-}
+[
+  {
+    "Id": 1,
+    "Name": "Блискавкозахист",
+    "Slug": "blyskavkozahyst",
+    "ParentCategoryId": null
+  },
+  {
+    "Id": 2,
+    "Name": "Електроживлення",
+    "Slug": "elektrozhyvlennya",
+    "ParentCategoryId": null
+  },
+  {
+    "Id": 3,
+    "Name": "Заземлення",
+    "Slug": "zazemlennya",
+    "ParentCategoryId": null
+  },
+  {
+    "Id": 4,
+    "Name": "Засоби монтажу",
+    "Slug": "zasoby-montazhu",
+    "ParentCategoryId": null
+  },
+  {
+    "Id": 5,
+    "Name": "ПЗІП CITEL",
+    "Slug": "pzip-citel",
+    "ParentCategoryId": null
+  },
+  {
+    "Id": 9,
+    "Name": "Активний блискавкозахист Gromostar",
+    "Slug": "aktyvnyi-blyskavkozahyst-gromostar",
+    "ParentCategoryId": 1
+  },
+  {
+    "Id": 6,
+    "Name": "Блискавкоприймачі",
+    "Slug": "blyskavkopryimachi",
+    "ParentCategoryId": 1
+  },
+  {
+    "Id": 7,
+    "Name": "Затискачі",
+    "Slug": "zatyskachi",
+    "ParentCategoryId": 1
+  },
+  {
+    "Id": 8,
+    "Name": "Провідники",
+    "Slug": "providnyky",
+    "ParentCategoryId": 1
+  },
+  {
+    "Id": 10,
+    "Name": "Різне",
+    "Slug": "rizne",
+    "ParentCategoryId": 1
+  },
+  {
+    "Id": 11,
+    "Name": "Тримач для даху",
+    "Slug": "trymach-dlya-dahu",
+    "ParentCategoryId": 1
+  },
+  {
+    "Id": 12,
+    "Name": "Тримач струмовідводу",
+    "Slug": "trymach-strumovidvodu",
+    "ParentCategoryId": 1
+  },
+  {
+    "Id": 13,
+    "Name": "Комплекти заземлення",
+    "Slug": "komplekty-zazemlennya",
+    "ParentCategoryId": 3
+  },
+  {
+    "Id": 14,
+    "Name": "Комплектуючі для заземлення",
+    "Slug": "komplektuyuchi-dlya-zazemlennya",
+    "ParentCategoryId": 3
+  },
+  {
+    "Id": 15,
+    "Name": "ПЗІП для високочастотних коаксіальних ліній",
+    "Slug": "pzip-dlya-vysokochastotnyh-koaksialnyh-liniy",
+    "ParentCategoryId": 5
+  },
+  {
+    "Id": 16,
+    "Name": "ПЗІП для ліній передачі даних",
+    "Slug": "pzip-dlya-liniy-peredachi-danyh",
+    "ParentCategoryId": 5
+  },
+  {
+    "Id": 17,
+    "Name": "ПЗІП для мереж змінного струму",
+    "Slug": "pzip-dlya-merezh-zminnogo-strumu",
+    "ParentCategoryId": 5
+  },
+  {
+    "Id": 18,
+    "Name": "ПЗІП для телефонних ліній",
+    "Slug": "pzip-dlya-telefonnyh-liniy",
+    "ParentCategoryId": 5
+  },
+  {
+    "Id": 19,
+    "Name": "ПЗІП для фотоелектричних систем та мереж постійного струму",
+    "Slug": "pzip-dlya-fotoelektrychnyh-system-ta-merezh-postiynogo-strumu",
+    "ParentCategoryId": 5
+  }
+]

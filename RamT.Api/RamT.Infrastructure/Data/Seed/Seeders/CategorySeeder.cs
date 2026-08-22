@@ -1,3 +1,4 @@
+using AutoMapper;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using RamT.Application.Interfaces;
@@ -6,7 +7,7 @@ using RamT.Domain.Entities;
 
 namespace RamT.Infrastructure.Data.Seed;
 
-public class CategorySeeder(AppDbContext context) : ISeeder
+public class CategorySeeder(AppDbContext context, IMapper mapper) : ISeeder
 {
     public async Task SeedAsync()
     {
@@ -24,26 +25,11 @@ public class CategorySeeder(AppDbContext context) : ISeeder
             PropertyNameCaseInsensitive = true
         }) ?? [];
 
-        var parents = dtos.Where(c => c.ParentCategoryId == null).Select(dto => new Category
-        {
-            Id = dto.Id,
-            Name = dto.Name,
-            Slug = dto.Slug,
-            ParentCategoryId = null
-        }).ToList();
-
+        var parents = mapper.Map<List<Category>>(dtos.Where(c => c.ParentCategoryId == null));
         await context.Categories.AddRangeAsync(parents);
         await context.SaveChangesAsync();
 
-        // Потім вставляємо дочірні категорії
-        var children = dtos.Where(c => c.ParentCategoryId != null).Select(dto => new Category
-        {
-            Id = dto.Id,
-            Name = dto.Name,
-            Slug = dto.Slug,
-            ParentCategoryId = dto.ParentCategoryId
-        }).ToList();
-
+        var children = mapper.Map<List<Category>>(dtos.Where(c => c.ParentCategoryId != null));
         if (children.Count > 0)
         {
             await context.Categories.AddRangeAsync(children);
