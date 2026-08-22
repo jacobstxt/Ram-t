@@ -16,6 +16,7 @@ public partial class ProductMapper
     {
         Id = product.Id,
         Name = product.Name,
+        Slug = product.Slug,
         ShortDescription = product.ShortDescription,
         Description = product.Description,
         Manufacturer = product.Manufacturer,

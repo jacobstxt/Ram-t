@@ -1,5 +1,4 @@
-﻿// RamT.Infrastructure/Repositories/ProductRepository.cs
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using RamT.Application.Interfaces;
 using RamT.Domain.Entities;
 using RamT.Infrastructure.Data;
