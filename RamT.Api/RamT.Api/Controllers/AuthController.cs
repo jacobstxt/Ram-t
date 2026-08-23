@@ -11,42 +11,21 @@ public class AuthController(IAuthService authService) : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterDto dto)
     {
-        try
-        {
-            var result = await authService.RegisterAsync(dto);
-            return Ok(result);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
+        var result = await authService.RegisterAsync(dto);
+        return Ok(result);
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto dto)
     {
-        try
-        {
-            var result = await authService.LoginAsync(dto);
-            return Ok(result);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return Unauthorized(new { message = ex.Message });
-        }
+        var result = await authService.LoginAsync(dto);
+        return Ok(result);
     }
 
     [HttpPost("refresh")]
     public async Task<IActionResult> Refresh(RefreshDto dto)
     {
-        try
-        {
-            var result = await authService.RefreshAsync(dto);
-            return Ok(result);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return Unauthorized(ex.Message);
-        }
+        var result = await authService.RefreshAsync(dto);
+        return Ok(result);
     }
 }

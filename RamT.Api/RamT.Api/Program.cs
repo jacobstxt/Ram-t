@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using RamT.Application.Interfaces;
 using RamT.Application.Mappings;
 using RamT.Application.Services;
+using RamT.Api.Middleware;
 using RamT.Application.Validators.Auth;
 using RamT.Infrastructure.Data;
 using RamT.Infrastructure.Data.Seed;
@@ -95,6 +96,7 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
