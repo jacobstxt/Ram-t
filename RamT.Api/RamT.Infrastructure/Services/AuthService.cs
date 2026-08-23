@@ -1,3 +1,4 @@
+using Google.Apis.Auth;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -57,6 +58,44 @@ public class AuthService(
 
         if (user.RefreshTokenExpiresAt < DateTime.UtcNow)
             throw new InvalidOperationException("Refresh token прострочений.");
+
+        return await GenerateTokensAsync(user);
+    }
+
+    public async Task<AuthResponseDto> GoogleAuthAsync(GoogleAuthDto dto)
+    {
+        var clientId = configuration["Google:ClientId"]!;
+
+        GoogleJsonWebSignature.Payload payload;
+        try
+        {
+            payload = await GoogleJsonWebSignature.ValidateAsync(dto.IdToken,
+                new GoogleJsonWebSignature.ValidationSettings { Audience = [clientId] });
+        }
+        catch (InvalidJwtException)
+        {
+            throw new InvalidOperationException("Недійсний Google токен.");
+        }
+
+        var user = await userManager.FindByEmailAsync(payload.Email);
+
+        if (user is null)
+        {
+            user = new AppUser
+            {
+                UserName = payload.Email,
+                Email = payload.Email,
+                EmailConfirmed = true,
+                FirstName = payload.GivenName ?? string.Empty,
+                LastName = payload.FamilyName ?? string.Empty
+            };
+
+            var result = await userManager.CreateAsync(user);
+            if (!result.Succeeded)
+                throw new InvalidOperationException(string.Join("; ", result.Errors.Select(e => e.Description)));
+
+            await userManager.AddToRoleAsync(user, "Customer");
+        }
 
         return await GenerateTokensAsync(user);
     }

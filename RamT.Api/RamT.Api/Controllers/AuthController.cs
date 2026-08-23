@@ -28,4 +28,11 @@ public class AuthController(IAuthService authService) : ControllerBase
         var result = await authService.RefreshAsync(dto);
         return Ok(result);
     }
+
+    [HttpPost("google")]
+    public async Task<IActionResult> Google(GoogleAuthDto dto)
+    {
+        var result = await authService.GoogleAuthAsync(dto);
+        return Ok(result);
+    }
 }
