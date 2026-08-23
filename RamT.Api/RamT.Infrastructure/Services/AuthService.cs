@@ -35,7 +35,7 @@ public class AuthService(
 
         await userManager.AddToRoleAsync(user, "Customer");
 
-        return GenerateTokens(user);
+        return await GenerateTokensAsync(user);
     }
 
     public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
@@ -46,14 +46,28 @@ public class AuthService(
         if (!await userManager.CheckPasswordAsync(user, dto.Password))
             throw new InvalidOperationException("Невірний email або пароль.");
 
-        return GenerateTokens(user);
+        return await GenerateTokensAsync(user);
     }
 
-    private AuthResponseDto GenerateTokens(AppUser user)
+    public async Task<AuthResponseDto> RefreshAsync(RefreshDto dto)
+    {
+        var user = userManager.Users
+            .SingleOrDefault(u => u.RefreshToken == dto.RefreshToken)
+            ?? throw new InvalidOperationException("Недійсний refresh token.");
+
+        if (user.RefreshTokenExpiresAt < DateTime.UtcNow)
+            throw new InvalidOperationException("Refresh token прострочений.");
+
+        return await GenerateTokensAsync(user);
+    }
+
+    private async Task<AuthResponseDto> GenerateTokensAsync(AppUser user)
     {
         var jwtSettings = configuration.GetSection("Jwt");
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]!));
         var expires = DateTime.UtcNow.AddMinutes(double.Parse(jwtSettings["ExpiresInMinutes"]!));
+
+        var roles = await userManager.GetRolesAsync(user);
 
         var claims = new List<Claim>
         {
@@ -61,6 +75,7 @@ public class AuthService(
             new(JwtRegisteredClaimNames.Email, user.Email!),
             new(ClaimTypes.Name, $"{user.FirstName} {user.LastName}".Trim())
         };
+        claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
 
         var token = new JwtSecurityToken(
             issuer: jwtSettings["Issuer"],
@@ -69,10 +84,15 @@ public class AuthService(
             expires: expires,
             signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256));
 
+        var refreshToken = GenerateRefreshToken();
+        user.RefreshToken = refreshToken;
+        user.RefreshTokenExpiresAt = DateTime.UtcNow.AddDays(30);
+        await userManager.UpdateAsync(user);
+
         return new AuthResponseDto
         {
             AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
-            RefreshToken = GenerateRefreshToken(),
+            RefreshToken = refreshToken,
             ExpiresAt = expires
         };
     }

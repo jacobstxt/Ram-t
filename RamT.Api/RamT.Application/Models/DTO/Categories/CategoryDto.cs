@@ -1,4 +1,4 @@
-namespace RamT.Application.Models;
+namespace RamT.Application.Models.DTO.Categories;
 
 public class CategoryDto
 {

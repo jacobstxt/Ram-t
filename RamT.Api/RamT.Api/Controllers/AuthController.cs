@@ -35,4 +35,18 @@ public class AuthController(IAuthService authService) : ControllerBase
             return Unauthorized(new { message = ex.Message });
         }
     }
+
+    [HttpPost("refresh")]
+    public async Task<IActionResult> Refresh(RefreshDto dto)
+    {
+        try
+        {
+            var result = await authService.RefreshAsync(dto);
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Unauthorized(ex.Message);
+        }
+    }
 }

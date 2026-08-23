@@ -1,4 +1,6 @@
 using System.Text;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using RamT.Application.Interfaces;
 using RamT.Application.Mappings;
 using RamT.Application.Services;
+using RamT.Application.Validators.Auth;
 using RamT.Infrastructure.Data;
 using RamT.Infrastructure.Data.Seed;
 using RamT.Infrastructure.Identity;
@@ -57,17 +60,20 @@ builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
-// Реєстрація сідерів (порядок важливий)
+
 builder.Services.AddScoped<ISeeder, RoleSeeder>();
 builder.Services.AddScoped<ISeeder, CategorySeeder>();
 builder.Services.AddScoped<ISeeder, ProductSeeder>();
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterValidator>();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Застосування міграцій та запуск сідерів при старті
+
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();

@@ -1,4 +1,4 @@
-namespace RamT.Application.Models;
+namespace RamT.Application.Models.DTO.Products;
 
 public class CompositionDto
 {

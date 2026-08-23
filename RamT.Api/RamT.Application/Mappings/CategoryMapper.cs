@@ -1,5 +1,5 @@
 using Riok.Mapperly.Abstractions;
-using RamT.Application.Models;
+using RamT.Application.Models.DTO.Categories;
 using RamT.Application.Models.SeedDTO;
 using RamT.Domain.Entities;
 

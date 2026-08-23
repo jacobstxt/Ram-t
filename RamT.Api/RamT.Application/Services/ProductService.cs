@@ -1,6 +1,6 @@
 using RamT.Application.Interfaces;
 using RamT.Application.Mappings;
-using RamT.Application.Models;
+using RamT.Application.Models.DTO.Products;
 
 namespace RamT.Application.Services;
 
