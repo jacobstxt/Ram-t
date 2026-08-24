@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using RamT.Application.Models.DTO.Products;
 using RamT.Application.Services;
 
 namespace RamT.Api.Controllers;
@@ -8,10 +9,10 @@ namespace RamT.Api.Controllers;
 public class ProductsController(ProductService productService) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetPaged([FromQuery] ProductQueryParams query)
     {
-        var products = await productService.GetAllAsync();
-        return Ok(products);
+        var result = await productService.GetPagedAsync(query);
+        return Ok(result);
     }
 
     [HttpGet("{id}")]
@@ -19,12 +20,5 @@ public class ProductsController(ProductService productService) : ControllerBase
     {
         var product = await productService.GetByIdAsync(id);
         return product is null ? NotFound() : Ok(product);
-    }
-
-    [HttpGet("category/{categoryId}")]
-    public async Task<IActionResult> GetByCategory(int categoryId)
-    {
-        var products = await productService.GetByCategoryAsync(categoryId);
-        return Ok(products);
     }
 }
