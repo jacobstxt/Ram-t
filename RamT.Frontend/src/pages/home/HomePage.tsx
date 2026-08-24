@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import heroImage from '@/assets/ram.webp'
 
 const services = [
     { num: '01', title: 'Проектування систем', desc: 'Розробка проектної документації для систем блискавкозахисту та заземлення відповідно до норм.' },
@@ -23,6 +24,16 @@ const HomePage = () => {
             {/* ── HERO ─────────────────────────────────────────────── */}
             <section className="relative min-h-screen flex flex-col justify-center overflow-hidden">
 
+                {/* background photo */}
+                <div className="absolute inset-0">
+                    <img
+                        src={heroImage}
+                        alt="RAM-T"
+                        className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-[#f4f4f0]/80 dark:bg-[#0a0a0f]/85" />
+                </div>
+
                 {/* background grid */}
                 <div
                     className="absolute inset-0 opacity-[0.03] dark:opacity-[0.04]"
@@ -32,57 +43,54 @@ const HomePage = () => {
                     }}
                 />
 
-                {/* diagonal yellow accent */}
-                <div className="absolute top-0 right-0 w-[55%] h-full bg-[#f5c518]/5 dark:bg-[#f5c518]/[0.04] [clip-path:polygon(15%_0,100%_0,100%_100%,0%_100%)]" />
+                <div className="relative max-w-7xl mx-auto px-6 pt-24 pb-16 w-full">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
-                {/* large background text */}
-                <span className="absolute right-0 bottom-8 font-display font-bold text-[clamp(80px,15vw,200px)] leading-none text-black/[0.04] dark:text-white/[0.03] select-none pointer-events-none pr-4 tracking-tight">
-                    RAM-T
-                </span>
+                        {/* Left — текст */}
+                        <div>
+                            <div className="flex items-center gap-3 mb-8">
+                                <div className="w-8 h-px bg-[#b8860b] dark:bg-[#f5c518]" />
+                                <span className="font-display text-xs font-medium tracking-[0.3em] uppercase text-[#b8860b] dark:text-[#f5c518]">
+                                    Тернопіль · з 2020 року
+                                </span>
+                            </div>
 
-                <div className="relative max-w-7xl mx-auto px-6 pt-24 pb-16">
-                    <div className="max-w-3xl">
-
-                        {/* label */}
-                        <div className="flex items-center gap-3 mb-8">
-                            <div className="w-8 h-px bg-[#b8860b] dark:bg-[#f5c518]" />
-                            <span className="font-display text-xs font-medium tracking-[0.3em] uppercase text-[#b8860b] dark:text-[#f5c518]">
-                                Тернопіль · з 2020 року
-                            </span>
+                            <h1 className="font-display font-bold leading-[0.9] tracking-tight">
+                                <span className="block text-[clamp(42px,6vw,90px)] text-black dark:text-white">
+                                    Блискавко-
+                                </span>
+                                <span className="block text-[clamp(42px,6vw,90px)] text-[#f5c518]">
+                                    захист
+                                </span>
+                                <span className="block text-[clamp(42px,6vw,90px)] text-black dark:text-white">
+                                    та заземлення
+                                </span>
+                            </h1>
                         </div>
 
-                        {/* heading */}
-                        <h1 className="font-display font-bold leading-[0.9] tracking-tight mb-8">
-                            <span className="block text-[clamp(52px,8vw,110px)] text-black dark:text-white">
-                                Блискавко-
-                            </span>
-                            <span className="block text-[clamp(52px,8vw,110px)] text-[#f5c518]">
-                                захист
-                            </span>
-                            <span className="block text-[clamp(52px,8vw,110px)] text-black dark:text-white">
-                                та заземлення
-                            </span>
-                        </h1>
+                        {/* Right — опис + кнопки */}
+                        <div className="flex flex-col justify-center gap-8">
+                            <p className="text-base text-black/65 dark:text-white/55 leading-relaxed font-sans">
+                                Проектування, монтаж і обслуговування систем захисту від блискавки.
+                                Власна бригада, офіційна гарантія, сертифіковане обладнання.
+                            </p>
 
-                        <p className="text-base text-black/60 dark:text-white/50 max-w-lg leading-relaxed mb-10 font-sans">
-                            Проектування, монтаж і обслуговування систем захисту від блискавки.
-                            Власна бригада, офіційна гарантія, сертифіковане обладнання.
-                        </p>
-
-                        <div className="flex flex-wrap gap-4">
-                            <Link
-                                to="/products"
-                                className="font-display text-sm font-semibold tracking-wider uppercase bg-[#f5c518] text-[#0a0a0f] px-8 py-4 hover:bg-[#f5c518]/90 hover:shadow-[0_0_32px_rgba(245,197,24,0.3)] transition-all duration-200 active:scale-95"
-                            >
-                                Переглянути каталог
-                            </Link>
-                            <a
-                                href="tel:+380970956306"
-                                className="font-display text-sm font-semibold tracking-wider uppercase border border-black/20 dark:border-white/20 text-black dark:text-white px-8 py-4 hover:border-[#f5c518] hover:text-[#f5c518] transition-all duration-200"
-                            >
-                                Зателефонувати
-                            </a>
+                            <div className="flex flex-wrap gap-4">
+                                <Link
+                                    to="/products"
+                                    className="font-display text-sm font-semibold tracking-wider uppercase bg-[#f5c518] text-[#0a0a0f] px-8 py-4 hover:bg-[#f5c518]/90 hover:shadow-[0_0_32px_rgba(245,197,24,0.3)] transition-all duration-200 active:scale-95"
+                                >
+                                    Переглянути каталог
+                                </Link>
+                                <a
+                                    href="tel:+380970956306"
+                                    className="font-display text-sm font-semibold tracking-wider uppercase border border-black/20 dark:border-white/20 text-black dark:text-white px-8 py-4 hover:border-[#f5c518] hover:text-[#f5c518] transition-all duration-200"
+                                >
+                                    Зателефонувати
+                                </a>
+                            </div>
                         </div>
+
                     </div>
                 </div>
 

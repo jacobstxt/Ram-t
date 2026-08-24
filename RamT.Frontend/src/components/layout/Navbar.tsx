@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useAppSelector } from '@/store/store.ts'
 import { useTheme } from '@/context/ThemeContext'
+import ThemeToggle from '@/components/ThemeToggle'
 import logo from '@/assets/icons/ram-logo-yellow.svg'
 
 const Navbar = () => {
     const [scrolled, setScrolled] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false)
     const user = useAppSelector(state => state.auth.user)
-    const { toggleTheme, isDark } = useTheme()
+    const { isDark } = useTheme()
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 20)
@@ -37,13 +38,7 @@ const Navbar = () => {
                 </Link>
 
                 <div className="hidden md:flex items-center gap-3">
-                    <button
-                        onClick={toggleTheme}
-                        className="w-9 h-9 flex items-center justify-center transition-colors duration-200 text-black/40 hover:text-black dark:text-white/40 dark:hover:text-white"
-                        aria-label="Перемкнути тему"
-                    >
-                        {isDark ? '☀' : '☾'}
-                    </button>
+                    <ThemeToggle />
 
                     {user ? (
                         <span className="text-sm font-mono text-black/60 dark:text-white/60">
