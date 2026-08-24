@@ -15,10 +15,17 @@ public class ProductsController(ProductService productService) : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById(int id)
     {
         var product = await productService.GetByIdAsync(id);
+        return product is null ? NotFound() : Ok(product);
+    }
+
+    [HttpGet("{slug}")]
+    public async Task<IActionResult> GetBySlug(string slug)
+    {
+        var product = await productService.GetBySlugAsync(slug);
         return product is null ? NotFound() : Ok(product);
     }
 }

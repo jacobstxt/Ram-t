@@ -24,4 +24,10 @@ public class ProductService(IProductRepository repository, ProductMapper mapper)
         var product = await repository.GetByIdAsync(id);
         return product is null ? null : mapper.ToDto(product);
     }
+
+    public async Task<ProductDto?> GetBySlugAsync(string slug)
+    {
+        var product = await repository.GetBySlugAsync(slug);
+        return product is null ? null : mapper.ToDto(product);
+    }
 }

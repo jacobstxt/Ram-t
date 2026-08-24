@@ -62,6 +62,15 @@ public class ProductRepository(AppDbContext context) : IProductRepository
             .Include(p => p.Reviews)
             .FirstOrDefaultAsync(p => p.Id == id);
 
+    public async Task<Product?> GetBySlugAsync(string slug) =>
+        await context.Products
+            .Include(p => p.Category)
+            .Include(p => p.Images.OrderBy(i => i.SortOrder))
+            .Include(p => p.Composition)
+            .Include(p => p.Characteristics)
+            .Include(p => p.Reviews)
+            .FirstOrDefaultAsync(p => p.Slug == slug);
+
     public async Task AddAsync(Product product)
     {
         await context.Products.AddAsync(product);

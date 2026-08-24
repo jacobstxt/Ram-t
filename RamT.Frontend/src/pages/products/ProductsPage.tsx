@@ -281,7 +281,7 @@ const ProductsPage = () => {
                                             className="group bg-black/5 dark:bg-white/5 rounded-xl overflow-hidden hover:bg-[#f5c518]/5 border border-transparent hover:border-[#f5c518]/20 transition-all duration-300"
                                         >
                                             {/* Image */}
-                                            <div className="h-64 bg-black/5 dark:bg-white/5 overflow-hidden">
+                                            <div className="h-60 bg-black/5 dark:bg-white/5 overflow-hidden">
                                                 {product.images.length > 0 ? (
                                                     <img
                                                         src={`${APP_IMAGE_URL}/1200_${product.images[0]}`}

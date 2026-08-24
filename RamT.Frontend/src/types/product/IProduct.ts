@@ -1,18 +1,17 @@
 export interface ICharacteristic {
-    name: string
+    key: string
     value: string
 }
 
 export interface IComposition {
-    name: string
-    quantity: number
-    unit: string
+    item: string
+    qty: string
 }
 
 export interface IReview {
-    author: string
+    authorName: string
     rating: number
-    comment: string
+    text: string
     createdAt: string
 }
 

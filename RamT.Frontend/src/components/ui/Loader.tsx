@@ -59,28 +59,49 @@ export const Spinner = ({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) => {
 
 // Повноекранний лоадер
 const Loader = () => (
-    <div className="flex flex-col items-center justify-center py-32 gap-5">
-        <div className="relative">
-            <div className="w-14 h-14 rounded-xl bg-[#f5c518]/10 border border-[#f5c518]/20 flex items-center justify-center">
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-[#f5c518]">
+    <div className="flex flex-col items-center justify-center py-32 gap-6">
+        <div className="relative w-16 h-16">
+            {/* Зовнішнє кільце */}
+            <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 64 64">
+                <circle
+                    cx="32" cy="32" r="28"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    className="text-black/10 dark:text-white/10"
+                />
+                <circle
+                    cx="32" cy="32" r="28"
+                    fill="none"
+                    stroke="#f5c518"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeDasharray="175.9"
+                    strokeDashoffset="132"
+                    style={{ animation: 'spin-dash 1.4s ease-in-out infinite' }}
+                />
+            </svg>
+            {/* Bolt по центру */}
+            <div className="absolute inset-0 flex items-center justify-center">
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-[#f5c518]" style={{ animation: 'pulse-bolt 1.4s ease-in-out infinite' }}>
                     <path d="M13 2L4.5 13.5H11L10 22L19.5 10H13L13 2Z" />
                 </svg>
             </div>
-            <div className="absolute inset-0 rounded-xl border border-[#f5c518]/40 animate-ping opacity-30" />
         </div>
-        <div className="flex gap-1">
-            {[0, 1, 2].map(i => (
-                <div
-                    key={i}
-                    className="w-1 h-1 rounded-full bg-[#f5c518]"
-                    style={{ animation: `bounce 1s ease-in-out ${i * 0.15}s infinite` }}
-                />
-            ))}
-        </div>
+
+        <span className="font-display text-xs tracking-[0.3em] uppercase text-black/30 dark:text-white/30">
+            Завантаження
+        </span>
+
         <style>{`
-            @keyframes bounce {
-                0%, 100% { transform: translateY(0); opacity: 0.4; }
-                50% { transform: translateY(-5px); opacity: 1; }
+            @keyframes spin-dash {
+                0%   { stroke-dashoffset: 175.9; transform: rotate(0deg); }
+                50%  { stroke-dashoffset: 44;    transform: rotate(180deg); }
+                100% { stroke-dashoffset: 175.9; transform: rotate(360deg); }
+            }
+            @keyframes pulse-bolt {
+                0%, 100% { opacity: 0.5; transform: scale(0.9); }
+                50%       { opacity: 1;   transform: scale(1.1); }
             }
         `}</style>
     </div>

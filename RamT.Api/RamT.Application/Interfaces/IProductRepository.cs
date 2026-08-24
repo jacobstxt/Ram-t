@@ -8,6 +8,7 @@ public interface IProductRepository
 {
     Task<PagedResult<Product>> GetPagedAsync(ProductQueryParams query);
     Task<Product?> GetByIdAsync(int id);
+    Task<Product?> GetBySlugAsync(string slug);
     Task AddAsync(Product product);
     Task UpdateAsync(Product product);
     Task DeleteAsync(Product product);
