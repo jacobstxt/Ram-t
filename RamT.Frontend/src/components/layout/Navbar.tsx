@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '@/store/store.ts'
 import { setUser } from '@/store/slices/authSlice'
+import { HiSun, HiMoon, HiArrowRightOnRectangle, HiShoppingBag } from 'react-icons/hi2'
 import { useTheme } from '@/context/ThemeContext'
 import ThemeToggle from '@/components/ui/ThemeToggle'
+import SubNav from '@/components/layout/SubNav'
 import Modal from '@/components/ui/Modal'
 import LoginForm from '@/components/auth/LoginForm'
 import RegisterForm from '@/components/auth/RegisterForm'
@@ -29,7 +31,7 @@ const Navbar = () => {
         return () => document.removeEventListener('mousedown', onClick)
     }, [])
     const user = useAppSelector(state => state.auth.user)
-    const { isDark } = useTheme()
+    const { isDark, toggleTheme } = useTheme()
     const [logout] = useLogoutMutation()
 
     useEffect(() => {
@@ -65,31 +67,63 @@ const Navbar = () => {
                         />
                     </Link>
 
-                    <div className="hidden md:flex items-center gap-3">
-                        <ThemeToggle />
+                    <div className="hidden md:flex flex-col items-center gap-0.5">
+                        <a href="tel:+380970956306" className="font-mono text-sm font-medium text-black/80 dark:text-white/80 hover:text-[#f5c518] transition-colors">
+                            +38 097 095 63 06
+                        </a>
+                        <span className="font-display text-[10px] tracking-widest uppercase text-black/35 dark:text-white/35">
+                            Пн–Пт &nbsp;9:00–18:00
+                        </span>
+                    </div>
 
+                    <div className="hidden md:flex items-center gap-3">
+                        {!user && <ThemeToggle />}
                         {user ? (
                             <div className="relative" ref={dropdownRef}>
                                 <button
                                     onClick={() => setDropdownOpen(v => !v)}
-                                    className="w-9 h-9 rounded-full bg-[#f5c518] text-[#0a0a0f] font-display font-bold text-sm flex items-center justify-center hover:shadow-[0_0_12px_rgba(245,197,24,0.5)] transition-all duration-200"
+                                    className="flex items-center gap-2.5 hover:opacity-80 transition-opacity duration-200"
                                 >
-                                    {user.firstName[0]}{user.lastName[0]}
+                                    <span className="font-display text-sm font-medium text-black/70 dark:text-white/70">
+                                        {user.firstName} {user.lastName}
+                                    </span>
+                                    <div className="w-8 h-8 rounded-full bg-[#f5c518] text-[#0a0a0f] font-display font-bold text-sm flex items-center justify-center hover:shadow-[0_0_12px_rgba(245,197,24,0.5)] transition-all duration-200">
+                                        {user.firstName[0]}{user.lastName[0]}
+                                    </div>
                                 </button>
 
                                 {dropdownOpen && (
-                                    <div className="absolute right-0 top-11 w-48 bg-[#f4f4f0] dark:bg-[#0f0f14] border border-black/10 dark:border-white/10 rounded-xl shadow-xl overflow-hidden z-50"
+                                    <div className="absolute right-0 top-11 w-56 bg-[#f4f4f0] dark:bg-[#0f0f14] border border-black/10 dark:border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50"
                                         style={{ animation: 'stepFadeIn 0.15s ease-out' }}
                                     >
                                         <div className="px-4 py-3 border-b border-black/5 dark:border-white/5">
                                             <p className="font-display font-semibold text-sm text-black dark:text-white">{user.firstName} {user.lastName}</p>
                                             <p className="text-xs text-black/40 dark:text-white/40 truncate">{user.email}</p>
                                         </div>
-                                        <div className="py-1">
+                                        <div className="p-1.5">
+                                            <Link
+                                                to="/orders"
+                                                onClick={() => setDropdownOpen(false)}
+                                                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-display tracking-wide text-black/50 dark:text-white/50 hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-white transition-colors"
+                                            >
+                                                <HiShoppingBag className="w-3.5 h-3.5" />
+                                                Замовлення
+                                            </Link>
+                                            <button
+                                                onClick={toggleTheme}
+                                                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-display tracking-wide text-black/50 dark:text-white/50 hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-white transition-colors"
+                                            >
+                                                {isDark ? <HiSun className="w-3.5 h-3.5" /> : <HiMoon className="w-3.5 h-3.5" />}
+                                                {isDark ? 'Світла тема' : 'Темна тема'}
+                                            </button>
+                                        </div>
+                                        <div className="mx-3 h-px bg-black/5 dark:bg-white/5" />
+                                        <div className="p-1.5">
                                             <button
                                                 onClick={() => { handleLogout(); setDropdownOpen(false) }}
-                                                className="w-full text-left px-4 py-2.5 text-sm font-display tracking-wide text-red-500/80 hover:bg-red-500/5 hover:text-red-500 transition-colors"
+                                                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-display tracking-wide text-red-500/70 hover:bg-red-500/5 hover:text-red-500 transition-colors"
                                             >
+                                                <HiArrowRightOnRectangle className="w-3.5 h-3.5" />
                                                 Вийти
                                             </button>
                                         </div>
@@ -155,16 +189,17 @@ const Navbar = () => {
                         )}
                     </div>
                 </div>
+                <SubNav />
             </header>
 
-            <Modal isOpen={activeModal === 'login'} onClose={closeModal} title="Вхід">
+            <Modal isOpen={activeModal === 'login'} onClose={closeModal} title="Вхід" width={380}>
                 <LoginForm
                     onSuccess={closeModal}
                     onSwitchToRegister={() => setActiveModal('register')}
                 />
             </Modal>
 
-            <Modal isOpen={activeModal === 'register'} onClose={closeModal} title="Реєстрація">
+            <Modal isOpen={activeModal === 'register'} onClose={closeModal} title="Реєстрація" width={380}>
                 <RegisterForm
                     onSuccess={closeModal}
                     onSwitchToLogin={() => setActiveModal('login')}

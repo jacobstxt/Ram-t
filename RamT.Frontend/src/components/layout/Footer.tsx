@@ -41,8 +41,8 @@ const Footer = () => {
                         <span className="font-display text-xs font-medium tracking-widest uppercase text-[#b8860b] dark:text-[#f5c518]/80 mb-1">
                             Навігація
                         </span>
-                        <Link to="/" className="font-display text-sm text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white transition-colors">Головна</Link>
-                        <Link to="/products" className="font-display text-sm text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white transition-colors">Каталог</Link>
+                        <Link to="/" onClick={() => window.scrollTo({ top: 0 })} className="font-display text-sm text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white transition-colors">Головна</Link>
+                        <Link to="/products" onClick={() => window.scrollTo({ top: 0 })} className="font-display text-sm text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white transition-colors">Каталог</Link>
                     </div>
 
                     {/* Contacts */}

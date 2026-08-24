@@ -14,7 +14,7 @@ const Layout = ({ children }: LayoutProps) => {
             <PageLoadingOverlay />
             <TopProgressBar />
             <Navbar />
-            <main className="flex-1 pt-16">
+            <main className="flex-1 pt-26">
                 {children}
             </main>
             <Footer />
