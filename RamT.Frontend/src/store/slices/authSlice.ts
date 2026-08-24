@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type {IAccount} from "@/types/Account/IAccount.ts";
+import type {IAccount} from "@/types/account/IAccount.ts";
 
 
 interface AuthState {

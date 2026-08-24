@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using RamT.Api.Middleware;
 using RamT.Application.Interfaces;
 using RamT.Infrastructure.Data;
@@ -30,6 +31,14 @@ public static class AppExtensions
 
         app.UseMiddleware<ExceptionMiddleware>();
         app.UseCors("AllowFrontend");
+
+        var imagesDir = Path.Combine(Directory.GetCurrentDirectory(), app.Configuration["ImagesDir"]!);
+        Directory.CreateDirectory(imagesDir);
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(imagesDir),
+            RequestPath = "/localImages"
+        });
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
