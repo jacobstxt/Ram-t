@@ -29,6 +29,7 @@ public static class AppExtensions
         }
 
         app.UseMiddleware<ExceptionMiddleware>();
+        app.UseCors("AllowFrontend");
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
