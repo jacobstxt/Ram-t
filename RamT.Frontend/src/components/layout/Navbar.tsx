@@ -59,7 +59,7 @@ const Navbar = () => {
                             </Link>
                             <Link
                                 to="/register"
-                                className="font-display text-sm font-medium tracking-wider uppercase text-[#0a0a0f] bg-[#f5c518] px-4 py-2 transition-all duration-200 hover:bg-[#f5c518]/90 hover:shadow-[0_0_16px_rgba(245,197,24,0.4)] active:scale-95"
+                                className="font-display text-sm font-medium tracking-wider uppercase text-[#0a0a0f] bg-[#f5c518] px-4 py-2 rounded transition-all duration-200 hover:bg-[#f5c518]/90 hover:shadow-[0_0_16px_rgba(245,197,24,0.4)] active:scale-95"
                             >
                                 Реєстрація
                             </Link>

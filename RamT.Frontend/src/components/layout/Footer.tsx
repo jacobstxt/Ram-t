@@ -38,7 +38,7 @@ const Footer = () => {
 
                     {/* Navigation */}
                     <div className="flex flex-col gap-3">
-                        <span className="font-display text-xs font-medium tracking-widest uppercase text-[#f5c518]/80 mb-1">
+                        <span className="font-display text-xs font-medium tracking-widest uppercase text-[#b8860b] dark:text-[#f5c518]/80 mb-1">
                             Навігація
                         </span>
                         <Link to="/" className="font-display text-sm text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white transition-colors">Головна</Link>
@@ -47,7 +47,7 @@ const Footer = () => {
 
                     {/* Contacts */}
                     <div className="flex flex-col gap-3">
-                        <span className="font-display text-xs font-medium tracking-widest uppercase text-[#f5c518]/80 mb-1">
+                        <span className="font-display text-xs font-medium tracking-widest uppercase text-[#b8860b] dark:text-[#f5c518]/80 mb-1">
                             Контакти
                         </span>
                         <div className="flex flex-col gap-1">
@@ -69,7 +69,7 @@ const Footer = () => {
 
                     {/* Address */}
                     <div className="flex flex-col gap-3">
-                        <span className="font-display text-xs font-medium tracking-widest uppercase text-[#f5c518]/80 mb-1">
+                        <span className="font-display text-xs font-medium tracking-widest uppercase text-[#b8860b] dark:text-[#f5c518]/80 mb-1">
                             Адреса
                         </span>
                         <p className="text-sm text-black/70 dark:text-white/70 leading-relaxed font-mono">

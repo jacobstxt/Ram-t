@@ -1,7 +1,6 @@
-
+@import url("https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap");
 @import "tailwindcss";
 @variant dark (&:where(.dark, .dark *));
-@import url("https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap");
 
 @theme {
   --color-primary: #f5c518;
@@ -15,30 +14,7 @@
   box-sizing: border-box;
 }
 
-:root, [data-theme="dark"] {
-  --bg: #0a0a0f;
-  --bg-secondary: #111118;
-  --surface: #16161f;
-  --border: rgba(255, 255, 255, 0.08);
-  --text: #ffffff;
-  --text-muted: rgba(255, 255, 255, 0.5);
-  --text-subtle: rgba(255, 255, 255, 0.25);
-}
-
-[data-theme="light"] {
-  --bg: #f4f4f0;
-  --bg-secondary: #eaeae4;
-  --surface: #ffffff;
-  --border: rgba(0, 0, 0, 0.08);
-  --text: #0a0a0f;
-  --text-muted: rgba(0, 0, 0, 0.5);
-  --text-subtle: rgba(0, 0, 0, 0.25);
-}
-
 body {
-  background-color: var(--bg);
-  color: var(--text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
-  transition: background-color 0.3s, color 0.3s;
 }
