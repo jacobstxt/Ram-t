@@ -16,7 +16,7 @@ public class AuthService(
     UserManager<AppUser> userManager,
     IConfiguration configuration) : IAuthService
 {
-    public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
+    public async Task<(AccountDto Account, string AccessToken, string RefreshToken)> RegisterAsync(RegisterDto dto)
     {
         var existing = await userManager.FindByEmailAsync(dto.Email);
         if (existing is not null)
@@ -39,7 +39,7 @@ public class AuthService(
         return await GenerateTokensAsync(user);
     }
 
-    public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
+    public async Task<(AccountDto Account, string AccessToken, string RefreshToken)> LoginAsync(LoginDto dto)
     {
         var user = await userManager.FindByEmailAsync(dto.Email)
             ?? throw new InvalidOperationException("Невірний email або пароль.");
@@ -50,10 +50,10 @@ public class AuthService(
         return await GenerateTokensAsync(user);
     }
 
-    public async Task<AuthResponseDto> RefreshAsync(RefreshDto dto)
+    public async Task<(AccountDto Account, string AccessToken, string RefreshToken)> RefreshAsync(string refreshToken)
     {
         var user = userManager.Users
-            .SingleOrDefault(u => u.RefreshToken == dto.RefreshToken)
+            .SingleOrDefault(u => u.RefreshToken == refreshToken)
             ?? throw new InvalidOperationException("Недійсний refresh token.");
 
         if (user.RefreshTokenExpiresAt < DateTime.UtcNow)
@@ -62,7 +62,7 @@ public class AuthService(
         return await GenerateTokensAsync(user);
     }
 
-    public async Task<AuthResponseDto> GoogleAuthAsync(GoogleAuthDto dto)
+    public async Task<(AccountDto Account, string AccessToken, string RefreshToken)> GoogleAuthAsync(GoogleAuthDto dto)
     {
         var clientId = configuration["Google:ClientId"]!;
 
@@ -100,7 +100,7 @@ public class AuthService(
         return await GenerateTokensAsync(user);
     }
 
-    private async Task<AuthResponseDto> GenerateTokensAsync(AppUser user)
+    private async Task<(AccountDto Account, string AccessToken, string RefreshToken)> GenerateTokensAsync(AppUser user)
     {
         var jwtSettings = configuration.GetSection("Jwt");
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]!));
@@ -128,12 +128,17 @@ public class AuthService(
         user.RefreshTokenExpiresAt = DateTime.UtcNow.AddDays(30);
         await userManager.UpdateAsync(user);
 
-        return new AuthResponseDto
+        var account = new AccountDto
         {
-            AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
-            RefreshToken = refreshToken,
-            ExpiresAt = expires
+            Id = user.Id,
+            Email = user.Email!,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            UserName = user.UserName!,
+            Role = roles.FirstOrDefault() ?? string.Empty
         };
+
+        return (account, new JwtSecurityTokenHandler().WriteToken(token), refreshToken);
     }
 
     private static string GenerateRefreshToken()

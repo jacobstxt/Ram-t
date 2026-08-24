@@ -4,8 +4,8 @@ namespace RamT.Application.Interfaces;
 
 public interface IAuthService
 {
-    Task<AuthResponseDto> RegisterAsync(RegisterDto dto);
-    Task<AuthResponseDto> LoginAsync(LoginDto dto);
-    Task<AuthResponseDto> RefreshAsync(RefreshDto dto);
-    Task<AuthResponseDto> GoogleAuthAsync(GoogleAuthDto dto);
+    Task<(AccountDto Account, string AccessToken, string RefreshToken)> RegisterAsync(RegisterDto dto);
+    Task<(AccountDto Account, string AccessToken, string RefreshToken)> LoginAsync(LoginDto dto);
+    Task<(AccountDto Account, string AccessToken, string RefreshToken)> RefreshAsync(string refreshToken);
+    Task<(AccountDto Account, string AccessToken, string RefreshToken)> GoogleAuthAsync(GoogleAuthDto dto);
 }

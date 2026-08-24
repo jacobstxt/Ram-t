@@ -34,7 +34,7 @@ export const createBaseQuery = (
         const normalizedArgs: FetchArgs =
             typeof args === "string"
                 ? { url: `${endpoint}/${args}` }
-                : { ...args, url: `${endpoint}/${args.url}` };
+                : { ...args, url: endpoint ? `${endpoint}/${args.url}` : args.url };
 
         await mutex.waitForUnlock();
         let result = await rawBaseQuery(normalizedArgs, api, extraOptions);
@@ -44,7 +44,7 @@ export const createBaseQuery = (
         }
 
         const url = typeof args === "string" ? args : args.url ?? "";
-        const skipRefresh = ["Account/refresh", "Account/login"]
+        const skipRefresh = ["auth/refresh", "auth/login"]
             .some(u => url.includes(u));
 
         if (skipRefresh) {
@@ -60,7 +60,7 @@ export const createBaseQuery = (
 
         try {
             const refreshResult = await rawBaseQuery(
-                { url: "Account/refresh", method: "POST" },
+                { url: "auth/refresh", method: "POST" },
                 api,
                 extraOptions
             );
