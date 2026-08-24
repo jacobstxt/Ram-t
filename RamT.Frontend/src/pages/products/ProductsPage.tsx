@@ -1,6 +1,8 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { HiMagnifyingGlass, HiXMark, HiChevronDown } from 'react-icons/hi2'
+import { Link, useSearchParams } from 'react-router-dom'
+import { HiMagnifyingGlass, HiXMark, HiChevronDown, HiOutlineArchiveBox, HiOutlinePhoto } from 'react-icons/hi2'
+import BackButton from '@/components/BackButton'
+import Pagination from '@/components/Pagination'
 import { useGetProductsQuery } from '@/services/productService'
 import { useGetCategoriesQuery } from '@/services/categoryService'
 import type { ICategory } from '@/types/category/ICategory'
@@ -77,38 +79,64 @@ const CategoryTree = ({
 )
 
 const ProductsPage = () => {
-    const [search, setSearch] = useState('')
-    const [searchInput, setSearchInput] = useState('')
-    const [categoryId, setCategoryId] = useState<number | undefined>()
-    const [page, setPage] = useState(1)
+    const [searchParams, setSearchParams] = useSearchParams()
+    const [searchInput, setSearchInput] = useState(searchParams.get('search') ?? '')
+
+    const search = searchParams.get('search') ?? ''
+    const categoryId = searchParams.get('categoryId') ? Number(searchParams.get('categoryId')) : undefined
+    const sortDir = (searchParams.get('sortDir') as 'asc' | 'desc') || undefined
+    const page = Number(searchParams.get('page') ?? '1')
+
+    const setParams = (updates: Record<string, string | undefined>, scrollTop = false) => {
+        setSearchParams(prev => {
+            const next = new URLSearchParams(prev)
+            Object.entries(updates).forEach(([key, val]) => {
+                if (val) next.set(key, val)
+                else next.delete(key)
+            })
+            return next
+        }, { replace: true })
+        if (scrollTop) window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
 
     const { data: categories } = useGetCategoriesQuery()
     const { data, isLoading, isFetching } = useGetProductsQuery({
         search: search || undefined,
         categoryId,
+        sortBy: sortDir ? 'price' : undefined,
+        sortDir,
         page,
         pageSize: 12,
     })
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault()
-        setSearch(searchInput)
-        setPage(1)
+        setParams({ search: searchInput || undefined, page: undefined })
     }
 
     const handleCategory = (id: number | undefined) => {
-        setCategoryId(id)
-        setPage(1)
+        setParams({ categoryId: id?.toString(), page: undefined })
+    }
+
+    const handleSortDir = (dir: 'asc' | 'desc' | undefined) => {
+        setParams({ sortDir: dir, page: undefined })
     }
 
     const handleClear = () => {
-        setSearch('')
         setSearchInput('')
-        setCategoryId(undefined)
-        setPage(1)
+        setSearchParams(new URLSearchParams(), { replace: true })
     }
 
-    const hasFilters = !!search || !!categoryId
+    const hasFilters = !!search || !!categoryId || !!sortDir
+
+    const findCategory = (cats: ICategory[], id: number): ICategory | undefined => {
+        for (const c of cats) {
+            if (c.id === id) return c
+            const found = findCategory(c.subCategories, id)
+            if (found) return found
+        }
+    }
+    const selectedCategoryName = categoryId && categories ? findCategory(categories, categoryId)?.name : undefined
 
     return (
         <div className="bg-[#f4f4f0] dark:bg-[#0a0a0f] min-h-screen transition-colors duration-300">
@@ -116,16 +144,51 @@ const ProductsPage = () => {
 
 
                 <div className="mb-10">
-                    <div className="flex items-center gap-3 mb-3">
-                        <div className="w-8 h-px bg-[#b8860b] dark:bg-[#f5c518]" />
-                        <span className="font-display text-xs tracking-[0.3em] uppercase text-[#b8860b] dark:text-[#f5c518]">
-                            RAM-T
-                        </span>
+                    <div className="mb-4">
+                        <BackButton />
                     </div>
-                    <h1 className="font-display font-bold text-[clamp(36px,5vw,64px)] text-black dark:text-white leading-tight">
+                    <h1 className="font-display font-bold text-[clamp(28px,3vw,42px)] text-black dark:text-white leading-tight">
                         Каталог товарів
                     </h1>
                 </div>
+
+                {hasFilters && (
+                    <div className="flex flex-wrap items-center gap-2 mb-6">
+                        <span className="text-xs font-display tracking-wider uppercase text-black/40 dark:text-white/40">
+                            Фільтри:
+                        </span>
+                        {search && (
+                            <span className="flex items-center gap-1.5 text-xs font-display px-3 py-1 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-black/70 dark:text-white/70">
+                                Пошук: <span className="font-semibold">{search}</span>
+                                <button onClick={() => setParams({ search: undefined, page: undefined })} className="text-black/40 hover:text-black dark:text-white/40 dark:hover:text-white ml-0.5">
+                                    <HiXMark className="w-3 h-3" />
+                                </button>
+                            </span>
+                        )}
+                        {selectedCategoryName && (
+                            <span className="flex items-center gap-1.5 text-xs font-display px-3 py-1 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-black/70 dark:text-white/70">
+                                Категорія: <span className="font-semibold">{selectedCategoryName}</span>
+                                <button onClick={() => setParams({ categoryId: undefined, page: undefined })} className="text-black/40 hover:text-black dark:text-white/40 dark:hover:text-white ml-0.5">
+                                    <HiXMark className="w-3 h-3" />
+                                </button>
+                            </span>
+                        )}
+                        {sortDir && (
+                            <span className="flex items-center gap-1.5 text-xs font-display px-3 py-1 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-black/70 dark:text-white/70">
+                                Ціна: <span className="font-semibold">{sortDir === 'asc' ? 'від дешевих' : 'від дорогих'}</span>
+                                <button onClick={() => setParams({ sortDir: undefined, page: undefined })} className="text-black/40 hover:text-black dark:text-white/40 dark:hover:text-white ml-0.5">
+                                    <HiXMark className="w-3 h-3" />
+                                </button>
+                            </span>
+                        )}
+                        <button
+                            onClick={handleClear}
+                            className="text-xs font-display tracking-wider uppercase text-red-500/60 hover:text-red-500 transition-colors ml-1"
+                        >
+                            Скинути все
+                        </button>
+                    </div>
+                )}
 
                 <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-10">
 
@@ -146,18 +209,34 @@ const ProductsPage = () => {
                             </button>
                         </form>
 
-                        {/* Clear filters */}
-                        {hasFilters && (
-                            <button
-                                onClick={handleClear}
-                                className="flex items-center gap-2 text-xs font-display tracking-wider uppercase text-black/40 dark:text-white/40 hover:text-red-500 dark:hover:text-red-400 transition-colors"
-                            >
-                                <HiXMark className="w-4 h-4" />
-                                Скинути фільтри
-                            </button>
-                        )}
+                        {/* Sort */}
+                        <div>
+                            <span className="font-display text-xs font-medium tracking-[0.25em] uppercase text-[#b8860b] dark:text-[#f5c518] block mb-3">
+                                Сортування
+                            </span>
+                            <div className="flex flex-col gap-1">
+                                {([
+                                    { label: 'Від дешевих', value: 'asc' },
+                                    { label: 'Від дорогих', value: 'desc' },
+                                ] as const).map(opt => (
+                                    <button
+                                        key={opt.value}
+                                        onClick={() => handleSortDir(sortDir === opt.value ? undefined : opt.value)}
+                                        className={`text-left text-sm px-3 py-1.5 rounded-lg transition-colors duration-150 font-display ${
+                                            sortDir === opt.value
+                                                ? 'bg-[#f5c518] text-[#0a0a0f] font-semibold'
+                                                : 'text-black/70 dark:text-white/60 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
+                                        }`}
+                                    >
+                                        {opt.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
 
-                        {/* Categories */}
+
+
+
                         {categories && categories.length > 0 && (
                             <div>
                                 <span className="font-display text-xs font-medium tracking-[0.25em] uppercase text-[#b8860b] dark:text-[#f5c518] block mb-3">
@@ -182,7 +261,7 @@ const ProductsPage = () => {
                         )}
                     </aside>
 
-                    {/* Products grid */}
+
                     <div>
                         {isLoading ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -192,7 +271,7 @@ const ProductsPage = () => {
                             </div>
                         ) : !data?.items.length ? (
                             <div className="flex flex-col items-center justify-center py-24 gap-4">
-                                <span className="text-5xl">🔍</span>
+                                <HiOutlineArchiveBox className="w-16 h-16 text-black/20 dark:text-white/20" />
                                 <p className="font-display text-lg text-black/40 dark:text-white/40">Товарів не знайдено</p>
                             </div>
                         ) : (
@@ -214,12 +293,12 @@ const ProductsPage = () => {
                                                     />
                                                 ) : (
                                                     <div className="w-full h-full flex items-center justify-center">
-                                                        <span className="text-4xl opacity-20">⚡</span>
+                                                        <HiOutlinePhoto className="w-12 h-12 text-black/10 dark:text-white/10" />
                                                     </div>
                                                 )}
                                             </div>
 
-                                            {/* Info */}
+
                                             <div className="p-5">
                                                 <span className="text-xs font-mono text-black/40 dark:text-white/40 uppercase tracking-wider">
                                                     {product.categoryName}
@@ -243,44 +322,12 @@ const ProductsPage = () => {
                                     ))}
                                 </div>
 
-                                {/* Pagination */}
-                                {data.totalPages > 1 && (
-                                    <div className="flex items-center justify-center gap-2 mt-10">
-                                        <button
-                                            onClick={() => setPage(p => Math.max(1, p - 1))}
-                                            disabled={page === 1}
-                                            className="font-display text-sm px-4 py-2 rounded-lg border border-black/10 dark:border-white/10 text-black/60 dark:text-white/60 hover:border-[#f5c518] hover:text-[#b8860b] dark:hover:text-[#f5c518] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-                                        >
-                                            ←
-                                        </button>
-
-                                        {Array.from({ length: data.totalPages }, (_, i) => i + 1).map(p => (
-                                            <button
-                                                key={p}
-                                                onClick={() => setPage(p)}
-                                                className={`font-display text-sm w-9 h-9 rounded-lg border transition-all ${
-                                                    p === page
-                                                        ? 'bg-[#f5c518] text-[#0a0a0f] border-[#f5c518] font-semibold'
-                                                        : 'border-black/10 dark:border-white/10 text-black/60 dark:text-white/60 hover:border-[#f5c518] hover:text-[#b8860b] dark:hover:text-[#f5c518]'
-                                                }`}
-                                            >
-                                                {p}
-                                            </button>
-                                        ))}
-
-                                        <button
-                                            onClick={() => setPage(p => Math.min(data.totalPages, p + 1))}
-                                            disabled={page === data.totalPages}
-                                            className="font-display text-sm px-4 py-2 rounded-lg border border-black/10 dark:border-white/10 text-black/60 dark:text-white/60 hover:border-[#f5c518] hover:text-[#b8860b] dark:hover:text-[#f5c518] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-                                        >
-                                            →
-                                        </button>
-                                    </div>
-                                )}
-
-                                <p className="text-center text-xs text-black/30 dark:text-white/30 font-mono mt-4">
-                                    {data.totalCount} товарів · сторінка {page} з {data.totalPages}
-                                </p>
+                                <Pagination
+                                    page={page}
+                                    totalPages={data.totalPages}
+                                    totalCount={data.totalCount}
+                                    onPageChange={p => setParams({ page: String(p) }, true)}
+                                />
                             </>
                         )}
                     </div>

@@ -23,7 +23,10 @@ public class ProductRepository(AppDbContext context) : IProductRepository
             q = q.Where(p => p.Name.ToLower().Contains(query.Search.ToLower()));
 
         if (query.CategoryId.HasValue)
-            q = q.Where(p => p.CategoryId == query.CategoryId.Value);
+        {
+            var categoryIds = await GetAllCategoryIdsAsync(query.CategoryId.Value);
+            q = q.Where(p => categoryIds.Contains(p.CategoryId));
+        }
 
         q = (query.SortBy?.ToLower(), query.SortDir?.ToLower()) switch
         {
@@ -75,5 +78,21 @@ public class ProductRepository(AppDbContext context) : IProductRepository
     {
         context.Products.Remove(product);
         await context.SaveChangesAsync();
+    }
+
+    private async Task<List<int>> GetAllCategoryIdsAsync(int rootId)
+    {
+        var all = await context.Categories.ToListAsync();
+        var result = new List<int>();
+        var queue = new Queue<int>();
+        queue.Enqueue(rootId);
+        while (queue.Count > 0)
+        {
+            var id = queue.Dequeue();
+            result.Add(id);
+            foreach (var child in all.Where(c => c.ParentCategoryId == id))
+                queue.Enqueue(child.Id);
+        }
+        return result;
     }
 }
