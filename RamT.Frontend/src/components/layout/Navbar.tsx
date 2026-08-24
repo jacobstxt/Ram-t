@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '@/store/store.ts'
 import { setUser } from '@/store/slices/authSlice'
@@ -17,6 +17,17 @@ const Navbar = () => {
     const [scrolled, setScrolled] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false)
     const [activeModal, setActiveModal] = useState<ModalType>(null)
+    const [dropdownOpen, setDropdownOpen] = useState(false)
+    const dropdownRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        const onClick = (e: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node))
+                setDropdownOpen(false)
+        }
+        document.addEventListener('mousedown', onClick)
+        return () => document.removeEventListener('mousedown', onClick)
+    }, [])
     const user = useAppSelector(state => state.auth.user)
     const { isDark } = useTheme()
     const [logout] = useLogoutMutation()
@@ -58,28 +69,44 @@ const Navbar = () => {
                         <ThemeToggle />
 
                         {user ? (
-                            <div className="flex items-center gap-3">
-                                <span className="text-sm font-mono text-black/60 dark:text-white/60">
-                                    {user.firstName} {user.lastName}
-                                </span>
+                            <div className="relative" ref={dropdownRef}>
                                 <button
-                                    onClick={handleLogout}
-                                    className="font-display text-sm tracking-wider uppercase text-black/50 dark:text-white/50 hover:text-black dark:hover:text-white transition-colors px-3 py-2"
+                                    onClick={() => setDropdownOpen(v => !v)}
+                                    className="w-9 h-9 rounded-full bg-[#f5c518] text-[#0a0a0f] font-display font-bold text-sm flex items-center justify-center hover:shadow-[0_0_12px_rgba(245,197,24,0.5)] transition-all duration-200"
                                 >
-                                    Вийти
+                                    {user.firstName[0]}{user.lastName[0]}
                                 </button>
+
+                                {dropdownOpen && (
+                                    <div className="absolute right-0 top-11 w-48 bg-[#f4f4f0] dark:bg-[#0f0f14] border border-black/10 dark:border-white/10 rounded-xl shadow-xl overflow-hidden z-50"
+                                        style={{ animation: 'stepFadeIn 0.15s ease-out' }}
+                                    >
+                                        <div className="px-4 py-3 border-b border-black/5 dark:border-white/5">
+                                            <p className="font-display font-semibold text-sm text-black dark:text-white">{user.firstName} {user.lastName}</p>
+                                            <p className="text-xs text-black/40 dark:text-white/40 truncate">{user.email}</p>
+                                        </div>
+                                        <div className="py-1">
+                                            <button
+                                                onClick={() => { handleLogout(); setDropdownOpen(false) }}
+                                                className="w-full text-left px-4 py-2.5 text-sm font-display tracking-wide text-red-500/80 hover:bg-red-500/5 hover:text-red-500 transition-colors"
+                                            >
+                                                Вийти
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         ) : (
                             <>
                                 <button
                                     onClick={() => setActiveModal('login')}
-                                    className="font-display text-sm font-medium tracking-wider uppercase transition-colors duration-200 px-4 py-2 text-black/60 hover:text-black dark:text-white/60 dark:hover:text-white"
+                                    className="font-display text-xs font-medium tracking-wider uppercase transition-colors duration-200 px-3 py-1.5 text-black/60 hover:text-black dark:text-white/60 dark:hover:text-white"
                                 >
                                     Увійти
                                 </button>
                                 <button
                                     onClick={() => setActiveModal('register')}
-                                    className="font-display text-sm font-medium tracking-wider uppercase text-[#0a0a0f] bg-[#f5c518] px-4 py-2 rounded transition-all duration-200 hover:bg-[#f5c518]/90 hover:shadow-[0_0_16px_rgba(245,197,24,0.4)] active:scale-95"
+                                    className="font-display text-xs font-medium tracking-wider uppercase text-[#0a0a0f] bg-[#f5c518] px-3 py-1.5 rounded transition-all duration-200 hover:bg-[#f5c518]/90 hover:shadow-[0_0_16px_rgba(245,197,24,0.4)] active:scale-95"
                                 >
                                     Реєстрація
                                 </button>

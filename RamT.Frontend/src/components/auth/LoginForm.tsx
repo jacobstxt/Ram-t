@@ -6,6 +6,7 @@ import { HiEye, HiEyeSlash } from 'react-icons/hi2'
 import { useLoginMutation } from '@/services/accountService'
 import { useAppDispatch } from '@/store/store'
 import { setUser } from '@/store/slices/authSlice'
+import GoogleButton from './GoogleButton'
 
 const schema = z.object({
     email: z.string().email('Невірний формат email'),
@@ -44,12 +45,7 @@ const LoginForm = ({ onSuccess, onSwitchToRegister }: LoginFormProps) => {
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 step-animate">
             <div>
                 <label className={labelClass}>Email</label>
-                <input
-                    {...register('email')}
-                    type="email"
-                    placeholder="your@email.com"
-                    className={inputClass}
-                />
+                <input {...register('email')} type="email" placeholder="your@email.com" className={inputClass} />
                 {errors.email && <p className={errorClass}>{errors.email.message}</p>}
             </div>
 
@@ -78,10 +74,12 @@ const LoginForm = ({ onSuccess, onSwitchToRegister }: LoginFormProps) => {
             <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3 rounded-xl bg-[#f5c518] hover:bg-[#e6b800] text-[#0a0a0f] font-display font-bold text-sm tracking-wider uppercase transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-1"
+                className="w-full py-3 rounded-xl bg-[#f5c518] hover:bg-[#e6b800] text-[#0a0a0f] font-display font-bold text-sm tracking-wider uppercase transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
                 {isLoading ? 'Вхід...' : 'Увійти'}
             </button>
+
+            <GoogleButton onSuccess={onSuccess} />
 
             <p className="text-center text-xs text-black/40 dark:text-white/40">
                 Немає акаунту?{' '}

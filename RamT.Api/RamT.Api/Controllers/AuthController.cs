@@ -38,10 +38,19 @@ public class AuthController(IAuthService authService) : ControllerBase
     [HttpPost("logout")]
     public IActionResult Logout()
     {
-        Response.Cookies.Delete("accessToken");
-        Response.Cookies.Delete("refreshToken");
+        var options = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.None,
+            Path = "/"
+        };
+
+        Response.Cookies.Delete("accessToken", options);
+        Response.Cookies.Delete("refreshToken", options);
         return NoContent();
     }
+
 
     [HttpPost("google")]
     public async Task<IActionResult> Google(GoogleAuthDto dto)

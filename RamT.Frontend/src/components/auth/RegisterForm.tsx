@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { HiEye, HiEyeSlash } from 'react-icons/hi2'
 import { useRegisterMutation } from '@/services/accountService'
+import GoogleButton from './GoogleButton'
 import { useAppDispatch } from '@/store/store'
 import { setUser } from '@/store/slices/authSlice'
 
@@ -26,11 +27,10 @@ const RegisterForm = ({ onSuccess, onSwitchToLogin }: RegisterFormProps) => {
     const [register, { isLoading, error }] = useRegisterMutation()
     const [showPassword, setShowPassword] = useState(false)
 
-    const { register: field, handleSubmit, watch, formState: { errors } } = useForm<FormData>({
+    const { register: field, handleSubmit, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(schema),
     })
 
-    const password = watch('password', '')
 
     const onSubmit = async (data: FormData) => {
         try {
@@ -82,7 +82,7 @@ return (
                         {showPassword ? <HiEyeSlash className="w-4 h-4" /> : <HiEye className="w-4 h-4" />}
                     </button>
                 </div>
-{errors.password && <p className={errorClass}>{errors.password.message}</p>}
+                {errors.password && <p className={errorClass}>{errors.password.message}</p>}
             </div>
 
             {error && (
@@ -98,6 +98,8 @@ return (
             >
                 {isLoading ? 'Реєстрація...' : 'Зареєструватись'}
             </button>
+
+            <GoogleButton onSuccess={onSuccess} label="Зареєструватись через Google" />
 
             <p className="text-center text-xs text-black/40 dark:text-white/40">
                 Вже є акаунт?{' '}

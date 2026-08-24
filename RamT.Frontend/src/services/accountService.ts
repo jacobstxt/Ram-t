@@ -30,7 +30,11 @@ export const accountApi = api.injectEndpoints({
         refresh: build.mutation<IAccount, void>({
             query: () => ({ url: 'auth/refresh', method: 'POST' }),
         }),
+        googleAuth: build.mutation<IAccount, { idToken: string }>({
+            query: (body) => ({ url: 'auth/google', method: 'POST', body }),
+            invalidatesTags: ['CurrentUser'],
+        }),
     }),
 })
 
-export const { useLoginMutation, useRegisterMutation, useLogoutMutation, useRefreshMutation } = accountApi
+export const { useLoginMutation, useRegisterMutation, useLogoutMutation, useRefreshMutation, useGoogleAuthMutation } = accountApi
