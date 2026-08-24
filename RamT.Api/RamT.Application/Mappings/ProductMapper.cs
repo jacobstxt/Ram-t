@@ -43,7 +43,15 @@ public partial class ProductMapper
     [MapperIgnoreSource(nameof(ProductSeedDTO.Composition))]
     [MapperIgnoreSource(nameof(ProductSeedDTO.Characteristics))]
     [MapperIgnoreSource(nameof(ProductSeedDTO.Reviews))]
-    public partial Product ToEntity(ProductSeedDTO dto);
+    [MapperIgnoreTarget(nameof(Product.Price))]
+    public partial Product ToEntityInternal(ProductSeedDTO dto);
+
+    public Product ToEntity(ProductSeedDTO dto)
+    {
+        var product = ToEntityInternal(dto);
+        product.Price = dto.Price ?? 0;
+        return product;
+    }
 
     [MapperIgnoreTarget(nameof(ProductComposition.Id))]
     [MapperIgnoreTarget(nameof(ProductComposition.ProductId))]

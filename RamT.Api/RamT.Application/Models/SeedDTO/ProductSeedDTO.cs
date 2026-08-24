@@ -9,7 +9,7 @@ public class ProductSeedDTO
     public string Description { get; set; } = string.Empty;
     public string Manufacturer { get; set; } = string.Empty;
     public int? WarrantyYears { get; set; }
-    public decimal Price { get; set; }
+    public decimal? Price { get; set; }
     public int CategoryId { get; set; }
     public List<string> Images { get; set; } = [];
     public List<CompositionSeedDTO> Composition { get; set; } = [];
