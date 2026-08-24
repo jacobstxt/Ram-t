@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { HiOutlinePhoto, HiChevronLeft, HiChevronRight, HiOutlineShieldCheck, HiOutlineCube, HiOutlineStar, HiOutlineClipboard } from 'react-icons/hi2'
 import { useGetProductBySlugQuery } from '@/services/productService'
@@ -7,9 +7,11 @@ import Loader from '@/components/ui/Loader'
 
 const APP_IMAGE_URL = import.meta.env.VITE_API_BASE_URL + import.meta.env.VITE_APP_IMAGE_URL
 
-const ProductPage = () => {
+const ProductViewPage = () => {
     const { slug } = useParams<{ slug: string }>()
     const { data: product, isLoading, isError } = useGetProductBySlugQuery(slug!)
+
+    useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }) }, [slug])
     const [activeImage, setActiveImage] = useState(0)
     const [activeTab, setActiveTab] = useState<'characteristics' | 'composition' | 'reviews'>('characteristics')
 
@@ -267,4 +269,4 @@ const ProductPage = () => {
     )
 }
 
-export default ProductPage
+export default ProductViewPage
