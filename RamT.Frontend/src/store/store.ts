@@ -2,12 +2,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import { type TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { setupListeners } from "@reduxjs/toolkit/query";
 import authReducer from './slices/authSlice.ts';
+import cartReducer from './slices/cartSlice.ts';
 import {api} from "../services/api.ts";
 
 export const store = configureStore({
     reducer: {
         [api.reducerPath]: api.reducer,
         auth: authReducer,
+        cart: cartReducer,
     },
 
     middleware: (getDefaultMiddleware) =>

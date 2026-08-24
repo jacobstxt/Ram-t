@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '@/store/store.ts'
 import { setUser } from '@/store/slices/authSlice'
-import { HiSun, HiMoon, HiArrowRightOnRectangle, HiShoppingBag } from 'react-icons/hi2'
+import { HiSun, HiMoon, HiArrowRightOnRectangle, HiShoppingBag, HiShoppingCart } from 'react-icons/hi2'
+import { selectCartCount } from '@/store/slices/cartSlice'
 import { useTheme } from '@/context/ThemeContext'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 import SubNav from '@/components/layout/SubNav'
@@ -31,6 +32,7 @@ const Navbar = () => {
         return () => document.removeEventListener('mousedown', onClick)
     }, [])
     const user = useAppSelector(state => state.auth.user)
+    const cartCount = useAppSelector(selectCartCount)
     const { isDark, toggleTheme } = useTheme()
     const [logout] = useLogoutMutation()
 
@@ -78,6 +80,17 @@ const Navbar = () => {
 
                     <div className="hidden md:flex items-center gap-3">
                         {!user && <ThemeToggle />}
+                        <button
+                            className="relative p-1 text-black/40 dark:text-white/40 hover:text-[#f5c518] transition-colors duration-200"
+                            aria-label="Кошик"
+                        >
+                            <HiShoppingCart className="w-5 h-5" />
+                            {cartCount > 0 && (
+                                <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-[#f5c518] text-[#0a0a0f] text-[10px] font-bold font-display flex items-center justify-center leading-none">
+                                    {cartCount > 99 ? '99+' : cartCount}
+                                </span>
+                            )}
+                        </button>
                         {user ? (
                             <div className="relative" ref={dropdownRef}>
                                 <button
@@ -148,7 +161,7 @@ const Navbar = () => {
                         )}
                     </div>
 
-                    {/* Mobile burger */}
+
                     <button
                         className="md:hidden flex flex-col gap-1.5 p-2"
                         onClick={() => setMenuOpen(v => !v)}
@@ -160,7 +173,7 @@ const Navbar = () => {
                     </button>
                 </div>
 
-                {/* Mobile menu */}
+
                 <div className={`md:hidden overflow-hidden transition-all duration-300 ${menuOpen ? 'max-h-64' : 'max-h-0'}`}>
                     <div className="border-t px-6 py-4 flex flex-col gap-4 bg-white/98 dark:bg-[#0a0a0f]/98 border-black/5 dark:border-white/5">
                         <div className="h-px bg-black/5 dark:bg-white/5" />

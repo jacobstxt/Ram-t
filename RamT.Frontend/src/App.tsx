@@ -6,6 +6,7 @@ import ProductsPage from '@/pages/products/ProductsPage'
 import ProductViewPage from '@/pages/products/ProductViewPage.tsx'
 import LoginPage from '@/pages/auth/LoginPage'
 import RegisterPage from '@/pages/auth/RegisterPage'
+import ContactsPage from '@/pages/contacts/ContactsPage'
 import { useRefreshMutation } from '@/services/accountService'
 import { useAppDispatch } from '@/store/store'
 import { setUser, clearUser } from '@/store/slices/authSlice'
@@ -29,6 +30,7 @@ function AppInit() {
                 <Route path="/products/:slug" element={<ProductViewPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
+                <Route path="/contacts" element={<ContactsPage />} />
             </Routes>
         </Layout>
     )
