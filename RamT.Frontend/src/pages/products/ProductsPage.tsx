@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { HiMagnifyingGlass, HiXMark, HiChevronDown, HiOutlineArchiveBox, HiOutlinePhoto } from 'react-icons/hi2'
-import BackButton from '@/components/BackButton'
-import Pagination from '@/components/Pagination'
+import BackButton from '@/components/ui/BackButton'
+import Pagination from '@/components/ui/Pagination'
+import Loader from '@/components/ui/Loader'
 import { useGetProductsQuery } from '@/services/productService'
 import { useGetCategoriesQuery } from '@/services/categoryService'
 import type { ICategory } from '@/types/category/ICategory'
@@ -140,7 +141,7 @@ const ProductsPage = () => {
 
     return (
         <div className="bg-[#f4f4f0] dark:bg-[#0a0a0f] min-h-screen transition-colors duration-300">
-            <div className="max-w-7xl mx-auto px-6 py-12">
+<div className="max-w-7xl mx-auto px-6 py-12">
 
 
                 <div className="mb-10">
@@ -264,11 +265,7 @@ const ProductsPage = () => {
 
                     <div>
                         {isLoading ? (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                                {Array.from({ length: 6 }).map((_, i) => (
-                                    <div key={i} className="bg-black/5 dark:bg-white/5 rounded-xl h-72 animate-pulse" />
-                                ))}
-                            </div>
+                            <Loader />
                         ) : !data?.items.length ? (
                             <div className="flex flex-col items-center justify-center py-24 gap-4">
                                 <HiOutlineArchiveBox className="w-16 h-16 text-black/20 dark:text-white/20" />

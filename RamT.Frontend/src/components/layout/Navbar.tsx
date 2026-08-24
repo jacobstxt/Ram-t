@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useAppSelector } from '@/store/store.ts'
 import { useTheme } from '@/context/ThemeContext'
-import ThemeToggle from '@/components/ThemeToggle'
+import ThemeToggle from '@/components/ui/ThemeToggle'
 import logo from '@/assets/icons/ram-logo-yellow.svg'
 
 const Navbar = () => {
