@@ -1,6 +1,6 @@
-import { useAppDispatch, useAppSelector } from '@/store/store'
-import { removeFromCart, updateQuantity, clearCart, selectCartItems, selectCartTotal } from '@/store/slices/cartSlice'
-import { useCart } from '@/context/CartContext'
+import { useAppDispatch, useAppSelector } from '@/store/store.ts'
+import { removeFromCart, updateQuantity, clearCart, selectCartItems, selectCartTotal } from '@/store/slices/cartSlice.ts'
+import { useCart } from '@/context/CartContext.tsx'
 import { Link } from 'react-router-dom'
 import { HiXMark, HiOutlineShoppingCart, HiOutlineTrash } from 'react-icons/hi2'
 

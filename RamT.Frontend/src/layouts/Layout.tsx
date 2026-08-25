@@ -2,8 +2,8 @@ import type { ReactNode } from 'react'
 import Navbar from '@/components/layout/Navbar.tsx'
 import Footer from '@/components/layout/Footer.tsx'
 import { TopProgressBar } from '@/components/ui/Loader'
-import PageLoadingOverlay from '@/components/ui/PageLoadingOverlay'
-import CartDrawer from '@/components/ui/CartDrawer'
+import PageLoadingOverlay from '@/components/overlays/PageLoadingOverlay.tsx'
+import CartDrawer from '@/components/cart/CartDrawer.tsx'
 
 interface LayoutProps {
     children: ReactNode

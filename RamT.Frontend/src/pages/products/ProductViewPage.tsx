@@ -7,7 +7,8 @@ import { addToCart, selectCartItems } from '@/store/slices/cartSlice'
 import { useCart } from '@/context/CartContext'
 import BackButton from '@/components/ui/BackButton'
 import Loader from '@/components/ui/Loader'
-import ProductGallery from '@/components/ui/ProductGallery'
+import ProductGallery from '@/components/product/ProductGallery.tsx'
+import RelatedProducts from '@/components/product/RelatedProducts.tsx'
 
 const APP_IMAGE_URL = import.meta.env.VITE_API_BASE_URL + import.meta.env.VITE_APP_IMAGE_URL
 
@@ -237,7 +238,14 @@ const ProductViewPage = () => {
                         </p>
                     </div>
                 )}
+
+                <RelatedProducts
+                    categoryId={product.categoryId}
+                    currentProductId={product.id}
+                    categoryName={product.categoryName}
+                />
             </div>
+
 
             <style>{`@keyframes fadeIn { from { opacity:0 } to { opacity:1 } }`}</style>
         </div>
