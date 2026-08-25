@@ -5,6 +5,7 @@ import { setUser } from '@/store/slices/authSlice'
 import { HiSun, HiMoon, HiArrowRightOnRectangle, HiShoppingBag, HiShoppingCart } from 'react-icons/hi2'
 import { selectCartCount } from '@/store/slices/cartSlice'
 import { useTheme } from '@/context/ThemeContext'
+import { useCart } from '@/context/CartContext'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 import SubNav from '@/components/layout/SubNav'
 import Modal from '@/components/ui/Modal'
@@ -34,6 +35,7 @@ const Navbar = () => {
     const user = useAppSelector(state => state.auth.user)
     const cartCount = useAppSelector(selectCartCount)
     const { isDark, toggleTheme } = useTheme()
+    const { open: openCart } = useCart()
     const [logout] = useLogoutMutation()
 
     useEffect(() => {
@@ -81,12 +83,14 @@ const Navbar = () => {
                     <div className="hidden md:flex items-center gap-3">
                         {!user && <ThemeToggle />}
                         <button
+                            id="cart-icon-btn"
+                            onClick={openCart}
                             className="relative p-1 text-black/40 dark:text-white/40 hover:text-[#f5c518] transition-colors duration-200"
                             aria-label="Кошик"
                         >
                             <HiShoppingCart className="w-5 h-5" />
                             {cartCount > 0 && (
-                                <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-[#f5c518] text-[#0a0a0f] text-[10px] font-bold font-display flex items-center justify-center leading-none">
+                                <span className="absolute -top-1 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#f5c518] text-[#0a0a0f] text-[10px] font-bold font-mono flex items-center justify-center leading-none shadow-[0_0_8px_rgba(245,197,24,0.5)] ring-2 ring-[#f4f4f0] dark:ring-[#0a0a0f]">
                                     {cartCount > 99 ? '99+' : cartCount}
                                 </span>
                             )}

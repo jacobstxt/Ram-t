@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { HiOutlinePhoto, HiOutlineShieldCheck, HiOutlineCube, HiOutlineStar, HiOutlineClipboard } from 'react-icons/hi2'
+import { HiOutlinePhoto, HiOutlineShieldCheck, HiOutlineCube, HiOutlineStar, HiOutlineClipboard, HiOutlineShoppingCart, HiCheck } from 'react-icons/hi2'
 import { useGetProductBySlugQuery } from '@/services/productService'
+import { useAppDispatch, useAppSelector } from '@/store/store'
+import { addToCart, selectCartItems } from '@/store/slices/cartSlice'
+import { useCart } from '@/context/CartContext'
 import BackButton from '@/components/ui/BackButton'
 import Loader from '@/components/ui/Loader'
 import ProductGallery from '@/components/ui/ProductGallery'
@@ -11,6 +14,24 @@ const APP_IMAGE_URL = import.meta.env.VITE_API_BASE_URL + import.meta.env.VITE_A
 const ProductViewPage = () => {
     const { slug } = useParams<{ slug: string }>()
     const { data: product, isLoading, isError } = useGetProductBySlugQuery(slug!)
+
+    const dispatch = useAppDispatch()
+    const { open: openCart } = useCart()
+    const cartItems = useAppSelector(selectCartItems)
+    const isInCart = product ? cartItems.some(i => i.id === product.id) : false
+
+    const handleAddToCart = () => {
+        if (!product) return
+        dispatch(addToCart({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.images[0] ?? null,
+            slug: product.slug,
+            quantity: 1,
+        }))
+        openCart()
+    }
 
     useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }) }, [slug])
     const [activeTab, setActiveTab] = useState<'characteristics' | 'composition' | 'reviews'>('characteristics')
@@ -107,20 +128,29 @@ const ProductViewPage = () => {
                         </div>
 
                         <div className="flex flex-col gap-3 mt-2">
-                            <a
-                                href="tel:+380975757520"
-                                className="flex items-center justify-center w-full py-3.5 rounded-xl bg-[#f5c518] hover:bg-[#e6b800] text-[#0a0a0f] font-display font-bold text-sm tracking-wider uppercase transition-colors duration-200"
-                            >
-                                Замовити дзвінок
-                            </a>
-                            <a
-                                href="https://t.me/ramt_ua"
-                                target="_blank"
-                                rel="noreferrer"
+                            {isInCart ? (
+                                <button
+                                    onClick={openCart}
+                                    className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-[#f5c518]/15 border border-[#f5c518]/40 text-[#b8860b] dark:text-[#f5c518] font-display font-bold text-sm tracking-wider uppercase transition-all duration-200"
+                                >
+                                    <HiCheck className="w-4 h-4" />
+                                    В кошику
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={handleAddToCart}
+                                    className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-[#f5c518] hover:bg-[#e6b800] hover:shadow-[0_0_24px_rgba(245,197,24,0.3)] text-[#0a0a0f] font-display font-bold text-sm tracking-wider uppercase transition-all duration-200 active:scale-[0.98]"
+                                >
+                                    <HiOutlineShoppingCart className="w-4 h-4" />
+                                    Купити
+                                </button>
+                            )}
+                            <Link
+                                to="/contacts"
                                 className="flex items-center justify-center w-full py-3.5 rounded-xl border border-black/10 dark:border-white/10 hover:border-[#f5c518]/50 text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white font-display text-sm tracking-wider uppercase transition-all duration-200"
                             >
-                                Написати в Telegram
-                            </a>
+                                Проконсультуватися
+                            </Link>
                         </div>
                     </div>
                 </div>
