@@ -5,7 +5,6 @@ import { useGetProductBySlugQuery } from '@/services/productService'
 import { useAppDispatch, useAppSelector } from '@/store/store'
 import { addToCart, selectCartItems } from '@/store/slices/cartSlice'
 import { useCart } from '@/context/CartContext'
-import BackButton from '@/components/ui/BackButton'
 import Loader from '@/components/ui/Loader'
 import ProductGallery from '@/components/product/ProductGallery.tsx'
 import RelatedProducts from '@/components/product/RelatedProducts.tsx'
@@ -62,19 +61,6 @@ const ProductViewPage = () => {
     return (
         <div className="bg-[#f4f4f0] dark:bg-[#0a0a0f] min-h-screen transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-6 py-12">
-
-                {/* Breadcrumb */}
-                <div className="flex items-center gap-3 mb-8">
-                    <BackButton />
-                    <span className="text-black/20 dark:text-white/20">·</span>
-                    <Link to="/products" className="font-display text-xs tracking-wider uppercase text-black/40 dark:text-white/40 hover:text-[#b8860b] dark:hover:text-[#f5c518] transition-colors">
-                        Каталог
-                    </Link>
-                    <span className="text-black/20 dark:text-white/20">·</span>
-                    <span className="font-display text-xs tracking-wider uppercase text-black/60 dark:text-white/60 truncate max-w-48">
-                        {product.name}
-                    </span>
-                </div>
 
                 {/* Main block */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
