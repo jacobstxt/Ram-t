@@ -37,7 +37,7 @@ const LoginForm = ({ onSuccess, onSwitchToRegister }: LoginFormProps) => {
         } catch {}
     }
 
-    const inputClass = 'w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-black dark:text-white placeholder:text-black/30 dark:placeholder:text-white/30 focus:outline-none focus:border-[#f5c518]/60 transition-colors'
+    const inputClass = 'w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-lg px-3 py-2 text-sm text-black dark:text-white placeholder:text-black/30 dark:placeholder:text-white/30 focus:outline-none focus:border-[#f5c518]/60 transition-colors'
     const labelClass = 'font-display text-xs tracking-wider uppercase text-black/50 dark:text-white/50 block mb-2'
     const errorClass = 'text-xs text-red-500 dark:text-red-400 mt-1'
 

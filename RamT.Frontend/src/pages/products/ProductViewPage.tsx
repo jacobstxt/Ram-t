@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { HiOutlinePhoto, HiChevronLeft, HiChevronRight, HiOutlineShieldCheck, HiOutlineCube, HiOutlineStar, HiOutlineClipboard } from 'react-icons/hi2'
+import { HiOutlinePhoto, HiOutlineShieldCheck, HiOutlineCube, HiOutlineStar, HiOutlineClipboard } from 'react-icons/hi2'
 import { useGetProductBySlugQuery } from '@/services/productService'
 import BackButton from '@/components/ui/BackButton'
 import Loader from '@/components/ui/Loader'
+import ProductGallery from '@/components/ui/ProductGallery'
 
 const APP_IMAGE_URL = import.meta.env.VITE_API_BASE_URL + import.meta.env.VITE_APP_IMAGE_URL
 
@@ -12,7 +13,6 @@ const ProductViewPage = () => {
     const { data: product, isLoading, isError } = useGetProductBySlugQuery(slug!)
 
     useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }) }, [slug])
-    const [activeImage, setActiveImage] = useState(0)
     const [activeTab, setActiveTab] = useState<'characteristics' | 'composition' | 'reviews'>('characteristics')
 
     if (isLoading) return <Loader />
@@ -30,8 +30,6 @@ const ProductViewPage = () => {
     }
 
     const images = product.images
-    const prevImage = () => setActiveImage(i => (i - 1 + images.length) % images.length)
-    const nextImage = () => setActiveImage(i => (i + 1) % images.length)
 
     const tabs = [
         { key: 'characteristics', label: 'Характеристики', icon: HiOutlineClipboard, count: product.characteristics.length },
@@ -60,60 +58,7 @@ const ProductViewPage = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
 
                     {/* Gallery */}
-                    <div className="flex flex-col gap-4">
-                        <div className="relative aspect-square bg-black/5 dark:bg-white/5 rounded-2xl overflow-hidden border border-black/5 dark:border-white/5">
-                            {images.length > 0 ? (
-                                <>
-                                    <img
-                                        key={activeImage}
-                                        src={`${APP_IMAGE_URL}/1200_${images[activeImage]}`}
-                                        alt={product.name}
-                                        className="w-full h-full object-contain"
-                                        style={{ animation: 'fadeIn 0.25s ease' }}
-                                    />
-                                    {images.length > 1 && (
-                                        <>
-                                            <button
-                                                onClick={prevImage}
-                                                className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-lg bg-white/80 dark:bg-black/80 backdrop-blur-sm border border-black/10 dark:border-white/10 flex items-center justify-center text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white hover:border-[#f5c518] transition-all"
-                                            >
-                                                <HiChevronLeft className="w-4 h-4" />
-                                            </button>
-                                            <button
-                                                onClick={nextImage}
-                                                className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-lg bg-white/80 dark:bg-black/80 backdrop-blur-sm border border-black/10 dark:border-white/10 flex items-center justify-center text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white hover:border-[#f5c518] transition-all"
-                                            >
-                                                <HiChevronRight className="w-4 h-4" />
-                                            </button>
-                                        </>
-                                    )}
-                                </>
-                            ) : (
-                                <div className="w-full h-full flex items-center justify-center">
-                                    <HiOutlinePhoto className="w-16 h-16 text-black/10 dark:text-white/10" />
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Thumbnails */}
-                        {images.length > 1 && (
-                            <div className="flex gap-2 overflow-x-auto pb-1">
-                                {images.map((img, i) => (
-                                    <button
-                                        key={i}
-                                        onClick={() => setActiveImage(i)}
-                                        className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
-                                            i === activeImage
-                                                ? 'border-[#f5c518]'
-                                                : 'border-transparent opacity-50 hover:opacity-80'
-                                        }`}
-                                    >
-                                        <img src={`${APP_IMAGE_URL}/200_${img}`} alt="" className="w-full h-full object-cover" />
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                    <ProductGallery images={images} name={product.name} imageBaseUrl={APP_IMAGE_URL} />
 
                     {/* Info */}
                     <div className="flex flex-col gap-6">
@@ -180,7 +125,7 @@ const ProductViewPage = () => {
                     </div>
                 </div>
 
-                {/* Tabs */}
+
                 {(product.characteristics.length > 0 || product.composition.length > 0 || product.reviews.length > 0) && (
                     <div>
                         <div className="flex gap-1 border-b border-black/10 dark:border-white/10 mb-8">
@@ -250,7 +195,7 @@ const ProductViewPage = () => {
                     </div>
                 )}
 
-                {/* Description */}
+
                 {product.description && (
                     <div className="mt-12 pt-10 border-t border-black/10 dark:border-white/10">
                         <div className="flex items-center gap-3 mb-6">
@@ -264,7 +209,7 @@ const ProductViewPage = () => {
                 )}
             </div>
 
-            <style>{`@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }`}</style>
+            <style>{`@keyframes fadeIn { from { opacity:0 } to { opacity:1 } }`}</style>
         </div>
     )
 }
