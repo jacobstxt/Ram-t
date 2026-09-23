@@ -9,6 +9,7 @@ export interface IComposition {
 }
 
 export interface IReview {
+    userId?: string
     authorName: string
     rating: number
     text: string

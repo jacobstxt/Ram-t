@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { HiOutlinePhoto, HiOutlineShieldCheck, HiOutlineCube, HiOutlineStar, HiOutlineClipboard, HiOutlineShoppingCart, HiCheck } from 'react-icons/hi2'
+import { HiOutlinePhoto, HiOutlineShieldCheck, HiOutlineCube, HiOutlineStar, HiStar, HiOutlineClipboard, HiOutlineShoppingCart, HiCheck } from 'react-icons/hi2'
 import { useGetProductBySlugQuery } from '@/services/productService'
+import { useCreateReviewMutation } from '@/services/reviewService'
 import { useAppDispatch, useAppSelector } from '@/store/store'
 import { addToCart, selectCartItems } from '@/store/slices/cartSlice'
 import { useCart } from '@/context/CartContext'
@@ -19,6 +20,13 @@ const ProductViewPage = () => {
     const dispatch = useAppDispatch()
     const { open: openCart } = useCart()
     const cartItems = useAppSelector(selectCartItems)
+    const user = useAppSelector(state => state.auth.user)
+    const [createReview, { isLoading: isSubmitting }] = useCreateReviewMutation()
+    const [reviewText, setReviewText] = useState('')
+    const [reviewRating, setReviewRating] = useState(0)
+    const [hoverRating, setHoverRating] = useState(0)
+    const [reviewSuccess, setReviewSuccess] = useState(false)
+    const [reviewError, setReviewError] = useState<string | null>(null)
     const isInCart = product ? cartItems.some(i => i.id === product.id) : false
 
     const handleAddToCart = () => {
@@ -32,6 +40,20 @@ const ProductViewPage = () => {
             quantity: 1,
         }))
         openCart()
+    }
+
+    const handleSubmitReview = async () => {
+        if (!product || reviewRating === 0 || !reviewText.trim()) return
+        setReviewError(null)
+        const result = await createReview({ productId: product.id, body: { text: reviewText.trim(), rating: reviewRating } })
+        if ('error' in result) {
+            setReviewError('Не вдалось надіслати відгук. Спробуйте ще раз.')
+            return
+        }
+        setReviewText('')
+        setReviewRating(0)
+        setReviewSuccess(true)
+        setTimeout(() => setReviewSuccess(false), 4000)
     }
 
     useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }) }, [slug])
@@ -191,32 +213,104 @@ const ProductViewPage = () => {
                             </div>
                         )}
 
-                        {activeTab === 'reviews' && product.reviews.length === 0 && (
-                            <div className="flex flex-col items-center justify-center py-12 text-black/30 dark:text-white/30">
-                                <HiOutlineStar className="w-10 h-10 mb-3 opacity-40" />
-                                <p className="font-display text-sm tracking-wide">Відгуків поки що немає</p>
-                                <p className="font-display text-xs mt-1 opacity-70">Будьте першим, хто залишить відгук</p>
-                            </div>
-                        )}
-
-                        {activeTab === 'reviews' && product.reviews.length > 0 && (
-                            <div className="flex flex-col gap-4">
-                                {product.reviews.map((r, i) => (
-                                    <div key={i} className="p-5 rounded-xl bg-black/[0.03] dark:bg-white/[0.03] border border-black/5 dark:border-white/5">
-                                        <div className="flex items-center justify-between mb-3">
-                                            <span className="font-display font-semibold text-sm text-black dark:text-white">{r.authorName}</span>
-                                            <div className="flex items-center gap-0.5">
-                                                {Array.from({ length: 5 }).map((_, j) => (
-                                                    <HiOutlineStar key={j} className={`w-3.5 h-3.5 ${j < r.rating ? 'text-[#f5c518] fill-[#f5c518]' : 'text-black/20 dark:text-white/20'}`} />
-                                                ))}
-                                            </div>
-                                        </div>
-                                        <p className="text-sm text-black/60 dark:text-white/60 leading-relaxed">{r.text}</p>
-                                        <span className="text-xs text-black/30 dark:text-white/30 font-mono mt-2 block">
-                                            {new Date(r.createdAt).toLocaleDateString('uk-UA')}
-                                        </span>
+                        {activeTab === 'reviews' && (
+                            <div className="flex flex-col gap-6">
+                                {product.reviews.length === 0 && (
+                                    <div className="flex flex-col items-center justify-center py-10 text-black/30 dark:text-white/30">
+                                        <HiOutlineStar className="w-10 h-10 mb-3 opacity-40" />
+                                        <p className="font-display text-sm tracking-wide">Відгуків поки що немає</p>
+                                        <p className="font-display text-xs mt-1 opacity-70">Будьте першим, хто залишить відгук</p>
                                     </div>
-                                ))}
+                                )}
+
+                                {product.reviews.length > 0 && (
+                                    <div className="flex flex-col gap-4">
+                                        {product.reviews.map((r, i) => (
+                                            <div key={i} className="p-5 rounded-xl bg-black/[0.03] dark:bg-white/[0.03] border border-black/5 dark:border-white/5">
+                                                <div className="flex items-center justify-between mb-3">
+                                                    <span className="font-display font-semibold text-sm text-black dark:text-white">{r.authorName}</span>
+                                                    <div className="flex items-center gap-0.5">
+                                                        {Array.from({ length: 5 }).map((_, j) => (
+                                                            <HiStar key={j} className={`w-3.5 h-3.5 ${j < r.rating ? 'text-[#f5c518]' : 'text-black/15 dark:text-white/15'}`} />
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                                <p className="text-sm text-black/60 dark:text-white/60 leading-relaxed">{r.text}</p>
+                                                <span className="text-xs text-black/30 dark:text-white/30 font-mono mt-2 block">
+                                                    {new Date(r.createdAt).toLocaleDateString('uk-UA')}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                <div className="pt-4 border-t border-black/10 dark:border-white/10">
+                                    <p className="font-display text-xs tracking-[0.2em] uppercase text-[#b8860b] dark:text-[#f5c518] mb-5">Залишити відгук</p>
+
+                                    {!user ? (
+                                        <div className="flex items-center gap-3 px-5 py-4 rounded-xl bg-black/[0.03] dark:bg-white/[0.03] border border-black/5 dark:border-white/5">
+                                            <HiOutlineStar className="w-5 h-5 text-black/30 dark:text-white/30 shrink-0" />
+                                            <p className="text-sm text-black/50 dark:text-white/50 font-display">
+                                                Щоб залишити відгук,{' '}
+                                                <Link to="/login" className="text-[#b8860b] dark:text-[#f5c518] hover:underline">
+                                                    увійдіть в акаунт
+                                                </Link>
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <div className="flex flex-col gap-4">
+                                            <div className="flex items-center gap-1">
+                                                {Array.from({ length: 5 }).map((_, i) => (
+                                                    <button
+                                                        key={i}
+                                                        type="button"
+                                                        onClick={() => setReviewRating(i + 1)}
+                                                        onMouseEnter={() => setHoverRating(i + 1)}
+                                                        onMouseLeave={() => setHoverRating(0)}
+                                                        className="transition-transform hover:scale-110"
+                                                    >
+                                                        <HiStar className={`w-7 h-7 transition-colors ${
+                                                            i < (hoverRating || reviewRating)
+                                                                ? 'text-[#f5c518]'
+                                                                : 'text-black/15 dark:text-white/15'
+                                                        }`} />
+                                                    </button>
+                                                ))}
+                                                {reviewRating > 0 && (
+                                                    <span className="ml-2 text-xs text-black/40 dark:text-white/40 font-display">
+                                                        {['', 'Погано', 'Задовільно', 'Непогано', 'Добре', 'Відмінно'][reviewRating]}
+                                                    </span>
+                                                )}
+                                            </div>
+
+                                            <textarea
+                                                value={reviewText}
+                                                onChange={e => setReviewText(e.target.value)}
+                                                placeholder="Напишіть ваш відгук..."
+                                                rows={4}
+                                                className="w-full px-4 py-3 rounded-xl bg-black/[0.03] dark:bg-white/[0.03] border border-black/10 dark:border-white/10 focus:border-[#f5c518]/50 focus:outline-none text-sm text-black dark:text-white font-display placeholder:text-black/30 dark:placeholder:text-white/30 resize-none transition-colors"
+                                            />
+
+                                            {reviewSuccess && (
+                                                <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-[#f5c518]/10 border border-[#f5c518]/20">
+                                                    <HiCheck className="w-4 h-4 text-[#b8860b] dark:text-[#f5c518]" />
+                                                    <span className="text-sm font-display text-[#b8860b] dark:text-[#f5c518]">Відгук успішно додано!</span>
+                                                </div>
+                                            )}
+                                            {reviewError && (
+                                                <p className="text-sm text-red-500 font-display">{reviewError}</p>
+                                            )}
+
+                                            <button
+                                                onClick={handleSubmitReview}
+                                                disabled={isSubmitting || reviewRating === 0 || !reviewText.trim()}
+                                                className="self-start px-6 py-2.5 rounded-xl bg-[#f5c518] hover:bg-[#e6b800] disabled:opacity-40 disabled:cursor-not-allowed text-[#0a0a0f] font-display font-bold text-sm tracking-wider uppercase transition-all duration-200 active:scale-[0.98]"
+                                            >
+                                                {isSubmitting ? 'Надсилання...' : 'Надіслати'}
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         )}
                     </div>
