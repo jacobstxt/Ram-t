@@ -141,8 +141,7 @@ const ProductsPage = () => {
 
     return (
         <div className="bg-[#f4f4f0] dark:bg-[#0a0a0f] min-h-screen transition-colors duration-300">
-<div className="max-w-7xl mx-auto px-6 py-12">
-
+            <div className="max-w-7xl mx-auto px-6 py-12">
 
                 <div className="mb-10">
                     <div className="mb-4">

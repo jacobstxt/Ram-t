@@ -70,4 +70,5 @@ public partial class ProductMapper
 
     public List<Product> ToEntityList(List<ProductSeedDTO> dtos) =>
         dtos.Select(ToEntity).ToList();
+
 }

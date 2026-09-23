@@ -5,6 +5,7 @@ public class ProductReview
     public int Id { get; set; }
     public int ProductId { get; set; }
     public Product Product { get; set; } = null!;
+    public string? UserId { get; set; }
     public string AuthorName { get; set; } = string.Empty;
     public string Text { get; set; } = string.Empty;
     public int Rating { get; set; }

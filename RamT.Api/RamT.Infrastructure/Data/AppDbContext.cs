@@ -49,5 +49,12 @@ public class AppDbContext : IdentityDbContext<AppUser>
             .WithMany(p => p.Reviews)
             .HasForeignKey(r => r.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ProductReview>()
+            .HasOne<AppUser>()
+            .WithMany()
+            .HasForeignKey(r => r.UserId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

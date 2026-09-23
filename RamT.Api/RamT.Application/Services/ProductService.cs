@@ -2,6 +2,7 @@ using RamT.Application.Interfaces;
 using RamT.Application.Mappings;
 using RamT.Application.Models.Common;
 using RamT.Application.Models.DTO.Products;
+using RamT.Domain.Entities;
 
 namespace RamT.Application.Services;
 
@@ -29,5 +30,24 @@ public class ProductService(IProductRepository repository, ProductMapper mapper)
     {
         var product = await repository.GetBySlugAsync(slug);
         return product is null ? null : mapper.ToDto(product);
+    }
+
+    public async Task<bool> CreateReviewAsync(int productId, CreateReviewDto dto, string userId, string authorName)
+    {
+        if (!await repository.ProductExistsAsync(productId))
+            return false;
+
+        var review = new ProductReview
+        {
+            ProductId = productId,
+            UserId = userId,
+            AuthorName = authorName,
+            Text = dto.Text,
+            Rating = dto.Rating,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        await repository.AddReviewAsync(review);
+        return true;
     }
 }

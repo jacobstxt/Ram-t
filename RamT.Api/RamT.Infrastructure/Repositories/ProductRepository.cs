@@ -89,6 +89,15 @@ public class ProductRepository(AppDbContext context) : IProductRepository
         await context.SaveChangesAsync();
     }
 
+    public async Task<bool> ProductExistsAsync(int productId) =>
+        await context.Products.AnyAsync(p => p.Id == productId);
+
+    public async Task AddReviewAsync(ProductReview review)
+    {
+        await context.ProductReviews.AddAsync(review);
+        await context.SaveChangesAsync();
+    }
+
     private async Task<List<int>> GetAllCategoryIdsAsync(int rootId)
     {
         var all = await context.Categories.ToListAsync();

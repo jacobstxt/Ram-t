@@ -8,6 +8,7 @@ import { useCart } from '@/context/CartContext'
 import Loader from '@/components/ui/Loader'
 import ProductGallery from '@/components/product/ProductGallery.tsx'
 import RelatedProducts from '@/components/product/RelatedProducts.tsx'
+import BackButton from "@/components/ui/BackButton.tsx";
 
 const APP_IMAGE_URL = import.meta.env.VITE_API_BASE_URL + import.meta.env.VITE_APP_IMAGE_URL
 
@@ -61,14 +62,15 @@ const ProductViewPage = () => {
     return (
         <div className="bg-[#f4f4f0] dark:bg-[#0a0a0f] min-h-screen transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-6 py-12">
+                <div className="mb-4">
+                    <BackButton />
+                </div>
 
-                {/* Main block */}
+
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
 
-                    {/* Gallery */}
                     <ProductGallery images={images} name={product.name} imageBaseUrl={APP_IMAGE_URL} />
 
-                    {/* Info */}
                     <div className="flex flex-col gap-6">
                         <div className="flex items-center gap-3">
                             <div className="w-6 h-px bg-[#b8860b] dark:bg-[#f5c518]" />
@@ -219,7 +221,6 @@ const ProductViewPage = () => {
                         )}
                     </div>
                 )}
-
 
                 {product.description && (
                     <div className="mt-12 pt-10 border-t border-black/10 dark:border-white/10">
