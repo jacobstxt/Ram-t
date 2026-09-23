@@ -16,7 +16,7 @@ public class ProductSeeder(AppDbContext context, IImageService imageService, Pro
 
         const string imageBaseUrl = "https://ram-t.com/wp-content/uploads/";
 
-        var seedDir = Path.Combine(AppContext.BaseDirectory, "Data", "Seed", "JsonSeedData");
+        var seedDir = Path.Combine(AppContext.BaseDirectory, "Data", "Seed", "JsonSeedData", "Products");
         var jsonFiles = Directory.GetFiles(seedDir, "Products_*.json");
 
         var dtos = new List<ProductSeedDTO>();

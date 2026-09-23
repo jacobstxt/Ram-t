@@ -146,7 +146,7 @@ const ProductViewPage = () => {
                 {(product.characteristics.length > 0 || product.composition.length > 0 || product.reviews.length > 0) && (
                     <div>
                         <div className="flex gap-1 border-b border-black/10 dark:border-white/10 mb-8">
-                            {tabs.map(tab => tab.count > 0 && (
+                            {tabs.map(tab => (tab.count > 0 || tab.key === 'reviews') && (
                                 <button
                                     key={tab.key}
                                     onClick={() => setActiveTab(tab.key)}
@@ -158,7 +158,7 @@ const ProductViewPage = () => {
                                 >
                                     <tab.icon className="w-4 h-4" />
                                     {tab.label}
-                                    <span className="text-xs opacity-50">({tab.count})</span>
+                                    {tab.count > 0 && <span className="text-xs opacity-50">({tab.count})</span>}
                                 </button>
                             ))}
                         </div>
@@ -186,6 +186,14 @@ const ProductViewPage = () => {
                                         <span className="text-sm font-display font-semibold text-black dark:text-white text-right">{c.qty}</span>
                                     </div>
                                 ))}
+                            </div>
+                        )}
+
+                        {activeTab === 'reviews' && product.reviews.length === 0 && (
+                            <div className="flex flex-col items-center justify-center py-12 text-black/30 dark:text-white/30">
+                                <HiOutlineStar className="w-10 h-10 mb-3 opacity-40" />
+                                <p className="font-display text-sm tracking-wide">Відгуків поки що немає</p>
+                                <p className="font-display text-xs mt-1 opacity-70">Будьте першим, хто залишить відгук</p>
                             </div>
                         )}
 
