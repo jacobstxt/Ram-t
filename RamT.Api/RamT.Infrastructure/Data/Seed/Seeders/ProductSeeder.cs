@@ -14,16 +14,25 @@ public class ProductSeeder(AppDbContext context, IImageService imageService, Pro
         if (await context.Products.AnyAsync())
             return;
 
-        var jsonPath = Path.Combine(
-            AppContext.BaseDirectory,
-            "Data", "Seed", "JsonSeedData", "Products.json");
+        const string imageBaseUrl = "https://ram-t.com/wp-content/uploads/";
 
-        var json = await File.ReadAllTextAsync(jsonPath);
+        var seedDir = Path.Combine(AppContext.BaseDirectory, "Data", "Seed", "JsonSeedData");
+        var jsonFiles = Directory.GetFiles(seedDir, "Products_*.json");
 
-        var dtos = JsonSerializer.Deserialize<List<ProductSeedDTO>>(json, new JsonSerializerOptions
+        var dtos = new List<ProductSeedDTO>();
+        var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+
+        Console.WriteLine("[Seed] Products seeding...");
+
+        foreach (var jsonPath in jsonFiles)
         {
-            PropertyNameCaseInsensitive = true
-        }) ?? [];
+            var json = await File.ReadAllTextAsync(jsonPath);
+            var batch = JsonSerializer.Deserialize<List<ProductSeedDTO>>(json, jsonOptions) ?? [];
+            dtos.AddRange(batch);
+        }
+
+        foreach (var dto in dtos)
+            dto.Images = dto.Images.Select(img => imageBaseUrl + img).ToList();
 
         var products = mapper.ToEntityList(dtos);
         await context.Products.AddRangeAsync(products);
@@ -78,5 +87,6 @@ public class ProductSeeder(AppDbContext context, IImageService imageService, Pro
             await context.ProductReviews.AddRangeAsync(reviews);
 
         await context.SaveChangesAsync();
+        Console.WriteLine($"[Seed] Products seeded successfully: {dtos.Count} products.");
     }
 }

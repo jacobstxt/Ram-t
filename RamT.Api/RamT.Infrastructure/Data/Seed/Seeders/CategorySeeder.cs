@@ -24,15 +24,22 @@ public class CategorySeeder(AppDbContext context, CategoryMapper mapper) : ISeed
             PropertyNameCaseInsensitive = true
         }) ?? [];
 
-        var parents = mapper.ToEntityList(dtos.Where(c => c.ParentCategoryId == null).ToList());
+        var parentDtos = dtos.Where(c => c.ParentCategoryId == null).ToList();
+        var childDtos = dtos.Where(c => c.ParentCategoryId != null).ToList();
+
+        Console.WriteLine($"[Seed] Seeding {parentDtos.Count} parent categories...");
+        var parents = mapper.ToEntityList(parentDtos);
         await context.Categories.AddRangeAsync(parents);
         await context.SaveChangesAsync();
 
-        var children = mapper.ToEntityList(dtos.Where(c => c.ParentCategoryId != null).ToList());
-        if (children.Count > 0)
+        if (childDtos.Count > 0)
         {
+            Console.WriteLine($"[Seed] Seeding {childDtos.Count} child categories...");
+            var children = mapper.ToEntityList(childDtos);
             await context.Categories.AddRangeAsync(children);
             await context.SaveChangesAsync();
         }
+
+        Console.WriteLine($"[Seed] Categories seeded successfully: {dtos.Count} total ({parentDtos.Count} parent, {childDtos.Count} child).");
     }
 }
